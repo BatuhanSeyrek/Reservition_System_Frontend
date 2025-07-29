@@ -1,7 +1,7 @@
 import { useNavigate, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandPointer } from '@fortawesome/free-regular-svg-icons';
-function AdminLogin() {
+function OwnerLogin() {
 
 
   return (
@@ -44,7 +44,7 @@ function AdminLogin() {
 
     <p class="mt-6 text-center text-sm text-gray-600">
       Don’t have an admin account?
-      <Link to="/adminRegister" class="text-blue-600 hover:underline">
+      <Link to="/ownerRegister" class="text-blue-600 hover:underline">
         Register here
       </Link>
     </p>
@@ -54,4 +54,4 @@ function AdminLogin() {
   );
 }
 
-export default AdminLogin;
+export default OwnerLogin;

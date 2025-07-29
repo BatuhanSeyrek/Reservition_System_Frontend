@@ -7,7 +7,7 @@ function HomePage() {
     <div className="bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 min-h-screen flex flex-col items-center justify-center">
       
       <div className="bg-white p-2 rounded-2xl shadow-md w-full max-w-md mb-2">
-        <Link to="/adminLogin" className="flex items-center justify-center text-blue-600 hover:underline">
+        <Link to="/ownerLogin" className="flex items-center justify-center text-blue-600 hover:underline">
           for admin click here<FontAwesomeIcon icon={faHandPointer} />
         </Link>
       </div>

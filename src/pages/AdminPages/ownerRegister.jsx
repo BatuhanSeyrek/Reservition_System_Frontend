@@ -1,6 +1,31 @@
 import React from 'react'
-import { useNavigate, Link } from 'react-router-dom';
-function AdminRegister() {
+import { useNavigate, Link} from 'react-router-dom';
+import { useState } from 'react';
+import axios from 'axios';
+function OwnerRegister() {
+  const [formData, setFormData] = useState({
+    adminName: '',
+    password: '',
+    storeName: ''
+  });
+
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await axios.post("http://localhost:8080/admin/register", formData);
+      alert("Kayıt başarılı!");
+      navigate("/ownerLogin");
+    } catch (err) {
+      alert("Hata: " + err.response?.data || err.message);
+    }
+  };
   return (
      <div class="bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 min-h-screen flex items-center justify-center p-4">
 
@@ -10,21 +35,21 @@ function AdminRegister() {
         <p class="text-sm text-gray-500 mt-2">Create a new admin account</p>
       </div>
 
-      <form action="#" method="POST" class="space-y-4">
+      <form onSubmit={handleSubmit} class="space-y-4">
         <div>
-          <label for="adminname" class="block text-sm font-semibold text-gray-700">Admin Name</label>
-          <input type="text" id="adminname" name="adminname" required
+          <label for="adminName" class="block text-sm font-semibold text-gray-700">Admin Name</label>
+          <input type="text" id="adminName" name="adminName" required value={formData.adminName} onChange={handleChange}
             class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500" />
         </div>
         <div>
           <label for="password" class="block text-sm font-semibold text-gray-700">Password</label>
-          <input type="password" id="password" name="password" required
+          <input type="password" id="password" name="password" required  value={formData.password} onChange={handleChange}
             class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500" />
         </div>
 
         <div>
-          <label for="store" class="block text-sm font-semibold text-gray-700">Store Name</label>
-          <input type="text" id="store" name="store" required
+          <label for="storeName" class="block text-sm font-semibold text-gray-700">Store Name</label>
+          <input type="text" id="storeName" name="storeName" required  value={formData.storeName} onChange={handleChange}
             class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500" />
         </div>
 
@@ -41,7 +66,7 @@ function AdminRegister() {
 
       <p class="text-center text-sm text-gray-600">
         Already have an admin account?
-        <Link to="/adminLogin" class="text-blue-600 hover:underline">
+        <Link to="/ownerLogin" class="text-blue-600 hover:underline">
         Login here
         </Link>
       </p>
@@ -51,4 +76,4 @@ function AdminRegister() {
   )
 }
 
-export default AdminRegister
+export default OwnerRegister

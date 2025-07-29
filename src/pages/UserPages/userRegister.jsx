@@ -1,7 +1,35 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import axios from 'axios';
 function userRegister() {
+    const [formData, setFormData] = useState({
+    userName: '',
+    email: '',
+    phoneNumber: '',
+    navigatetionType: '',
+    password: '',
+  });
+
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await axios.post("http://localhost:8080/user/register", formData);
+      alert("Kayıt başarılı!");
+      navigate("/");
+    } catch (err) {
+      alert("Hata: " + err.response?.data || err.message);
+    }
+  };
   return (
+    
     <div class="bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 min-h-screen flex items-center justify-center p-4">
 
     <div class="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 space-y-6">
@@ -10,28 +38,28 @@ function userRegister() {
 
       </div>
 
-      <form action="#" method="POST" class="space-y-4">
+      <form onSubmit={handleSubmit} class="space-y-4">
         <div>
-          <label for="name" class="block text-sm font-semibold text-gray-700">Name</label>
-          <input type="text" id="name" name="name" required
+          <label for="userName" class="block text-sm font-semibold text-gray-700">Name</label>
+          <input type="text" id="userName" name="userName" required onChange={handleChange} value={formData.userName}
             class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" />
         </div>
 
         <div>
           <label for="email" class="block text-sm font-semibold text-gray-700">Email</label>
-          <input type="email" id="email" name="email" required
+          <input type="email" id="email" name="email" required onChange={handleChange} value={formData.email}
             class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" />
         </div>
 
         <div>
-          <label for="phone" class="block text-sm font-semibold text-gray-700">Phone</label>
-          <input type="tel" id="phone" name="phone" required
+          <label for="phoneNumber" class="block text-sm font-semibold text-gray-700">Phone</label>
+          <input type="text" id="phoneNumber" name="phoneNumber" required onChange={handleChange} value={formData.phoneNumber}
             class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" />
         </div>
 
         <div>
-          <label for="notificationType" class="block text-sm font-semibold text-gray-700">Notification Type</label>
-          <select id="notificationType" name="notificationType" required
+          <label for="navigatetionType" class="block text-sm font-semibold text-gray-700">Notification Type</label>
+          <select id="navigatetionType" name="navigatetionType" required onChange={handleChange} value={formData.navigatetionType}
             class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
             <option value="">Select...</option>
             <option value="EMAIL">Email</option>
@@ -42,7 +70,7 @@ function userRegister() {
 
         <div>
           <label for="password" class="block text-sm font-semibold text-gray-700">Password</label>
-          <input type="password" id="password" name="password" required
+          <input type="password" id="password" name="password" required onChange={handleChange} value={formData.password}
             class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" />
         </div>
 
