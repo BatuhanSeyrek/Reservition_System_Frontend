@@ -4,7 +4,7 @@ import OwnerLogin from './pages/AdminPages/ownerLogin';
 import OwnerRegister from './pages/AdminPages/ownerRegister';
 import UserRegister from './pages/UserPages/userRegister';
 import UserHome from './pages/UserPages/userHome';
-import About from './pages/UserPages/About';
+import UserAbout from './pages/UserPages/userAbout';
 import AllStores from './pages/UserPages/AllStores';
 import Reservation from './pages/UserPages/reservation';
 import CreateReservation from './pages/UserPages/createReservation';
@@ -22,6 +22,7 @@ import OwnerUpdate from './pages/AdminPages/OwnerUpdate';
 import OwnerInformation  from './pages/AdminPages/ownerInformation';
 import ChairToEmployee from './pages/AdminPages/chairToEmployee';
 import OwnerDelete from './pages/AdminPages/ownerDelete';
+import OwnerAbout from './pages/AdminPages/ownerAbout';
 function App() {
   return (
     <Router>
@@ -31,7 +32,7 @@ function App() {
         <Route path="/ownerRegister" element={<OwnerRegister />} />
         <Route path="/userRegister" element={<UserRegister />} />
         <Route path="/userhome" element={<UserHome />} />
-        <Route path="/about" element={<About/>} />
+        <Route path="/userAbout" element={<UserAbout/>} />
         <Route path="/allStores" element={<AllStores/>} />
         <Route path="/reservation" element={<Reservation />} />
         <Route path="/createReservation" element={<CreateReservation/>} />
@@ -49,6 +50,7 @@ function App() {
         <Route path='/ownerInformation' element={<OwnerInformation/>}/>
         <Route path='/chairToEmployee' element={<ChairToEmployee/>}/>
         <Route path='/ownerDelete' element={<OwnerDelete/>}/>
+        <Route path='/ownerAbout' element={<OwnerAbout/>}/>
       </Routes>
     </Router>
   );

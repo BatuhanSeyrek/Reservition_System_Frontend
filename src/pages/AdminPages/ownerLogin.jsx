@@ -2,12 +2,11 @@ import { useNavigate, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandPointer } from '@fortawesome/free-regular-svg-icons';
 import React, { useState } from 'react';
-import axios from 'axios';
-
+import {postData } from '../../apiService';
 
 
 function OwnerLogin() {
-const [adminName, setAdminName] = useState('');
+  const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
@@ -15,22 +14,25 @@ const [adminName, setAdminName] = useState('');
     e.preventDefault();
 
     try {
-      // Giriş isteği
-      const response = await axios.post("http://localhost:8080/user/login", {
-        adminName,
+      const response = await postData("/admin/login", {
+        username,
         password
       });
 
-      // Token'ı al
-      const token = response.data.token;
+      console.log("response objesi:", response);
+      console.log("response.data:", response.data);
+      console.log("response.data.token:", response.data.token);
 
-      // localStorage'a kaydet
-      localStorage.setItem("token", token);
+      if (!response.data.token) {
+        alert("Token bulunamadı!");
+        return;
+      }
 
-      // yönlendir
-      navigate("/About");
+      localStorage.setItem("token", response.data.token);
+      navigate("/ownerAbout");
     } catch (err) {
       alert("Giriş başarısız!");
+      console.error(err);
     }
   };
 
@@ -47,8 +49,8 @@ const [adminName, setAdminName] = useState('');
     
     <form onSubmit={handleLogin} class="space-y-4">
       <div>
-        <label for="adminName" class="block text-sm font-medium text-gray-700">Admin Name</label>
-        <input type="text" id="adminName" name="adminName" required onChange={e => setAdminName(e.target.value)} value={adminName}
+        <label for="username" class="block text-sm font-medium text-gray-700">Admin Name</label>
+        <input type="text" id="username" name="username" required onChange={e => setUserName(e.target.value)} value={username}
           class="mt-1 w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500" />
       </div>
 

@@ -3,6 +3,7 @@ import axios from "axios";
 // Yeni bir axios örneği oluştur
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8080", // Backend'in URL'si
+   withCredentials: true 
 });
 
 // Her istekten önce token'ı header'a ekle

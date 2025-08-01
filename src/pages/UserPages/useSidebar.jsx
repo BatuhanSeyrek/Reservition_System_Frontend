@@ -9,7 +9,7 @@ function Sidebar() {
       <h2 className="text-2xl font-bold mb-6 text-blue-600">User Panel</h2>
       <ul className="space-y-4">
         <li className="text-gray-700 hover:text-blue-600 cursor-pointer">
-          <Link to="/about" className="flex items-center gap-2">
+          <Link to="/userAbout" className="flex items-center gap-2">
             <span>About</span>
             <FontAwesomeIcon icon={faCircleInfo} className="text-dark-500 mr-2" />
           </Link>
