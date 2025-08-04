@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from './ownerSidebar';
 import axios from 'axios';
+import { putData } from '../../apiService';
+import AdminLayout from './AdminLayout';
 
 function OwnerUpdate() {
   const [admin, setAdmin] = useState({
@@ -10,64 +11,52 @@ function OwnerUpdate() {
     storeName: '',
   });
 
-  // Form gönderimi
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem('token');
-
-    axios.put('http://localhost:8080/admin/update', admin, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-    .then(res => {
-      alert("Bilgiler başarıyla güncellendi.");
-      console.log("Güncelleme başarılı:", res.data);
-      setAdmin(res.data);
-    })
-    .catch(err => {
-      console.error("Güncelleme sırasında hata:", err);
-      alert("Güncelleme sırasında hata oluştu.");
-    });
-  };
-
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
       alert("Lütfen giriş yapın.");
       window.location.href = "/ownerLogin";
     }
+
     axios.get('http://localhost:8080/admin/myAdmin', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      headers: { Authorization: `Bearer ${token}` }
     })
-    .then(res => {
-      setAdmin(res.data);
-    })
-    .catch(err => {
-      console.error("Admin bilgileri alınırken hata oluştu:", err);
-    });
+      .then(res => setAdmin(res.data))
+      .catch(err => console.error("Admin bilgileri alınırken hata oluştu:", err));
   }, []);
 
-  // Form inputlarını kontrol etmek için genel onChange handler
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setAdmin(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setAdmin(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+
+    putData('/admin/update', admin)
+      .then(() => {
+        alert("Bilgiler başarıyla güncellendi.");
+        axios.get('http://localhost:8080/admin/myAdmin', {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+          .then(res => setAdmin(res.data))
+          .catch(err => console.error("Admin bilgileri alınırken hata oluştu:", err));
+      })
+      .catch(err => {
+        console.error("Güncelleme sırasında hata:", err);
+        alert("Güncelleme sırasında hata oluştu.");
+      });
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <Sidebar />
-      <div className="flex-1 p-6 bg-gray-100 w-full max-w-md justify-center items-center mx-auto mt-auto border-2 border-gray-400 rounded shadow my-auto">
+    <AdminLayout>
+      <div className="w-full max-w-md mx-auto bg-white p-6 rounded shadow border border-gray-300 mt-4">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-800">Admin Revision</h2>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div>
             <label htmlFor="adminName" className="block text-sm font-semibold text-gray-700">Admin Name</label>
             <input
@@ -107,14 +96,6 @@ function OwnerUpdate() {
             />
           </div>
 
-          <div className="flex items-center justify-between text-sm text-gray-600">
-            <label className="flex items-center">
-              <input type="checkbox" className="form-checkbox text-blue-600" />
-              <span className="ml-2">Remember me</span>
-            </label>
-            <a href="#" className="text-blue-500 hover:underline">Forgot password?</a>
-          </div>
-
           <button
             type="submit"
             className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition duration-200"
@@ -123,7 +104,7 @@ function OwnerUpdate() {
           </button>
         </form>
       </div>
-    </div>
+    </AdminLayout>
   );
 }
 

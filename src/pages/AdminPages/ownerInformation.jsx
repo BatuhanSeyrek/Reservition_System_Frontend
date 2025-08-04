@@ -1,22 +1,23 @@
-import React, { useEffect } from 'react'
-import Sidebar from './ownerSidebar';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useState } from 'react';
-function ownerInformation() {
+import AdminLayout from './AdminLayout';
+
+function OwnerInformation() {
   const [admin, setAdmin] = useState({
-    id: '',
+    adminId: '',
     adminName: '',
+    password: '',
     chairCount: '',
     storeName: '',
-    
   });
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
       alert("Lütfen giriş yapın.");
-      window.location.href = "ownerLogin"; // Giriş sayfasına yönlendir
+      window.location.href = "/ownerLogin";
     }
+
     axios.get('http://localhost:8080/admin/myAdmin', {
       headers: {
         Authorization: `Bearer ${token}`
@@ -24,42 +25,25 @@ function ownerInformation() {
     })
       .then(res => {
         setAdmin(res.data);
-        console.log("Admin Bilgileri:", res.data);
       })
       .catch(err => {
-        console.error("Admin bilgileri alınırken hata oluştu:", err);
+        console.error("Hata:", err);
       });
-  }
-  , []);
-  return (
-    <div className="flex min-h-screen bg-gray-100">
-      <Sidebar />
-       <div className="flex-1 p-6 bg-gray-100 w-full max-w-md justify-center items-center mx-auto mt-auto border-2 border-gray-400 rounded shadow my-auto ">
-        
-      <div class="text-center ">
-        <h2 class="text-3xl font-bold text-gray-800 mb-5">Admin Information</h2>
+  }, []);
 
-      </div>
-      <div className="bg-white rounded shadow p-1 border-2 border-gray-200 mb-4">
-        <p className="text-gray-600  ">Admin ID: <strong>{admin.id}</strong></p>
-      </div>
-      <div className="bg-white rounded shadow p-1 border-2 border-gray-200 mb-4">
-        <p className="text-gray-600 ">Admin Name: <strong>{admin.adminName}</strong></p>
-      </div>
-      <div className="bg-white rounded shadow p-1 border-2 border-gray-200 mb-4">
-        <p className="text-gray-600 ">Store Name: <strong>{admin.storeName}</strong></p>
-      </div>
-       
-      <div className="bg-white rounded shadow p-1 border-2 border-gray-200 mb-4">
-        <p className='text-gray-600 '>Chair Count: <strong>{admin.chairCount}</strong></p>
-      </div>
-    </div>
-        
-        
-        
+  return (
+    <AdminLayout>
+      <div className="max-w-md">
+        <h2 className="text-xl font-semibold mb-4">Admin Information</h2>
+        <div className="bg-white p-4 mb-4 border-2 border-gray-200 rounded shadow">
+          <p><strong>Admin Name:</strong> {admin.adminName}</p>
+          <p><strong>Chair Count:</strong> {admin.chairCount}</p>
+          <p><strong>Store Name:</strong> {admin.storeName}</p>
+          
         </div>
-   
-  )
+      </div>
+    </AdminLayout>
+  );
 }
 
-export default ownerInformation
+export default OwnerInformation;

@@ -2,6 +2,7 @@ import React from 'react'
 import { useNavigate, Link} from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
+import {postData } from '../../apiService';
 function OwnerRegister() {
   const [formData, setFormData] = useState({
     adminName: '',
@@ -19,7 +20,7 @@ function OwnerRegister() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:8080/admin/register", formData);
+       const response = await postData("/admin/register", formData);
       alert("Kayıt başarılı!");
       navigate("/ownerLogin");
     } catch (err) {

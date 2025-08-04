@@ -1,140 +1,160 @@
-import React, { useEffect, useState } from 'react';
-import Sidebar from './ownerSidebar';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { deleteData } from '../../apiService';
+import AdminLayout from './AdminLayout';
 
 function ChairDeleteUpdate() {
-  const [chair, setChair] = useState([]);
+  const [chairList, setChairList] = useState([]);
+  const [openingTime, setOpeningTime] = useState('');
+  const [closingTime, setClosingTime] = useState('');
+  const [islemSuresi, setIslemSuresi] = useState('');
+  const [chairName, setChairName] = useState('');
   const token = localStorage.getItem('token');
+  const [editMode, setEditMode] = useState(false);
+  const [editChairId, setEditChairId] = useState(null);
+
+  const handleEdit = (chair) => {
+    setEditMode(true);
+    setEditChairId(chair.id);
+    setOpeningTime(chair.openingTime);
+    setClosingTime(chair.closingTime);
+    setIslemSuresi(chair.islemSuresi);
+    setChairName(chair.chairName);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!openingTime || !closingTime || !islemSuresi || !chairName) {
+      return alert("Lütfen tüm alanları doldurun.");
+    }
+
+    try {
+      if (editMode) {
+        await axios.put(`https://109da8a5c0f8.ngrok-free.app/admin/chair/update/${editChairId}`, {
+          openingTime,
+          closingTime,
+          islemSuresi,
+          chairName
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        const updatedList = await axios.get('http://localhost:8080/admin/chair/list', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setChairList(updatedList.data);
+        alert("Koltuk başarıyla güncellendi.");
+      } else {
+        const res = await axios.post("https://109da8a5c0f8.ngrok-free.app/admin/chair/chairAdd", {
+          openingTime,
+          closingTime,
+          islemSuresi,
+          chairName
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setChairList(prevList => [...prevList, res.data]);
+        alert("Koltuk başarıyla eklendi!");
+      }
+
+      // Reset
+      setOpeningTime('');
+      setClosingTime('');
+      setIslemSuresi('');
+      setChairName('');
+      setEditMode(false);
+      setEditChairId(null);
+    } catch (err) {
+      alert("İşlem hatası: " + (err.response?.data || err.message));
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Bu koltuğu silmek istediğinizden emin misiniz?")) {
+      try {
+        await deleteData(`/admin/chair/delete/${id}`);
+        setChairList(chairList.filter(chair => chair.id !== id));
+        alert("Koltuk başarıyla silindi.");
+      } catch (err) {
+        console.error("Silme hatası:", err);
+        alert("Silme hatası: " + (err.response?.data || err.message));
+      }
+    }
+  };
 
   useEffect(() => {
     axios.get('http://localhost:8080/admin/chair/list', {
       headers: { Authorization: `Bearer ${token}` }
     })
-    .then(res => {
-      setChair(res.data);
-      console.log("Chairs:", res.data);
-    })
-    .catch(err => {
-      console.error("Chairs could not be fetched:", err);
-    });
-  }, []);
-
-  const handleDelete = (id) => {
-    if (window.confirm("Bu sandalyeyi silmek istediğinizden emin misiniz?")) {
-      axios.delete(`http://localhost:8080/admin/chair/delete/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      .then(res => {
-        console.log("Chair deleted:", res.data);
-        setChair(chair.filter(c => c.id !== id));
-      })
-      .catch(err => {
-        console.error("Chair could not be deleted:", err);
-      });
-    }
-  };
- const [formData, setFormData] = useState({
-    chairName: '',
-    openingTime: '',
-    closingTime: '',
-    islemSuresi: ''
-  });
-
-
-
-  const handleChange = (e) => {
-    setFormData({...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      await axios.post("http://localhost:8080/admin/chair/chairAdd", formData, {
-        headers: { Authorization: `Bearer ${token}` } 
-      })
-      .alert("Kayıt başarılı!");
-    } catch (err) {
-      alert("Hata: " + err.response?.data || err.message);
-    }
-  };
+      .then(res => setChairList(res.data))
+      .catch(err => console.error("Listeleme hatası:", err));
+  }, [token]);
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <Sidebar />
-      <div className="flex-1 p-6 bg-gray-100 ml-70">
-        <div className="flex gap-6">
-          {/* Chair List */}
-          <div className="w-2/4">
-            <h2 className="text-xl font-semibold mb-4">Chair Information</h2>
-            {chair.map(c => (
-              <div key={c.id} className="bg-white p-4 mb-4 border-2 rounded shadow flex">
-                <div className="w-3/4">
-                  <p><strong>Chair ID:</strong> {c.id}</p>
-                  <p><strong>Opening Time:</strong> {c.openingTime}</p>
-                  <p><strong>Closing Time:</strong> {c.closingTime}</p>
-                  <p><strong>Processing Time:</strong> {c.islemSuresi}</p>
-                  <p><strong>Chair Name:</strong> {c.chairName}</p>
-                </div>
-                <div className="w-1/4 flex flex-col justify-center items-end gap-2 text-xl">
-                  <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition w-full">
-                    Edit
-                  </button>
-                  <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-full transition"
-                    onClick={() => handleDelete(c.id)}>
-                    Delete
-                  </button>
-                </div>
+    <AdminLayout>
+      <div className="flex gap-6">
+        {/* Sol: Liste */}
+        <div className="w-1/2">
+          <h2 className="text-xl font-semibold mb-4">Chair Information</h2>
+          {chairList.map((chair) => (
+            <div key={chair.id} className="bg-white p-4 mb-4 border-2 border-black-200 rounded shadow flex">
+              <div className="w-3/4">
+                <p><strong>Chair ID:</strong> {chair.id}</p>
+                <p><strong>Chair Name:</strong> {chair.chairName}</p>
+                <p><strong>Opening Time:</strong> {chair.openingTime}</p>
+                <p><strong>Closing Time:</strong> {chair.closingTime}</p>
+                <p><strong>Processing Time:</strong> {chair.islemSuresi}</p>
               </div>
-            ))}
-          </div>
-
-          {/* Chair Create Form */}
-          <div className="w-2/4 p-1 bg-gray-100">
-            <h2 className="text-xl font-semibold mb-4">Chair Create</h2>
-            <div className="bg-white p-4 rounded shadow">
-              <form className="space-y-4" onSubmit={handleSubmit}>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Chair Name</label>
-                  <input type="text" name="chairName" required onChange={handleChange} value={formData.chairName}
-                    className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Opening Time</label>
-                  <input type="time" name="openingTime" required onChange={handleChange} value={formData.openingTime}
-                    className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Closing Time</label>
-                  <input type="time" name="closingTime" required onChange={handleChange} value={formData.closingTime}
-                    className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Processing Time</label>
-                  <input type="time" name="islemSuresi" required  onChange={handleChange} value={formData.islemSuresi}
-                    className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg" />
-                </div>
-                <div className="flex gap-4">
-                  <div className="w-1/2">
-                    <button type="submit"
-                      className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition">
-                      Create Chair
-                    </button>
-                  </div>
-                  <div className="w-1/2">
-                    <button type="button" disabled
-                      className="w-full bg-gray-400 text-white font-semibold py-2 rounded-lg">
-                      Update Chair
-                    </button>
-                  </div>
-                </div>
-              </form>
+              <div className="w-1/4 flex flex-col justify-center items-end gap-2 text-xl">
+                <button onClick={() => handleEdit(chair)} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full">
+                  Edit
+                </button>
+                <button onClick={() => handleDelete(chair.id)} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-full">
+                  Delete
+                </button>
+              </div>
             </div>
-          </div>
+          ))}
+        </div>
 
+        {/* Sağ: Form */}
+        <div className="w-1/2 bg-white p-6 rounded shadow">
+          <h2 className="text-xl font-semibold mb-4">{editMode ? "Edit Chair" : "Create Chair"}</h2>
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700">Chair Name</label>
+              <input type="text" value={chairName} onChange={(e) => setChairName(e.target.value)} className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg" />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700">Opening Time</label>
+              <input type="time" value={openingTime} onChange={(e) => setOpeningTime(e.target.value)} className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg" />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700">Closing Time</label>
+              <input type="time" value={closingTime} onChange={(e) => setClosingTime(e.target.value)} className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg" />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700">Processing Time</label>
+              <input type="time" value={islemSuresi} onChange={(e) => setIslemSuresi(e.target.value)} className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg" />
+            </div>
+
+            <div className="flex gap-4">
+              <button type="submit" className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition">{editMode ? "Update" : "Create"}</button>
+              {editMode && (
+                <button type="button" onClick={() => {
+                  setEditMode(false);
+                  setEditChairId(null);
+                  setOpeningTime('');
+                  setClosingTime('');
+                  setIslemSuresi('');
+                  setChairName('');
+                }} className="w-full bg-gray-400 text-white font-semibold py-2 rounded-lg hover:bg-gray-500 transition">Cancel</button>
+              )}
+            </div>
+          </form>
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 }
 

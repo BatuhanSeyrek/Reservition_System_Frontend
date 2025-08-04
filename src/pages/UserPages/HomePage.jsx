@@ -3,32 +3,25 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandPointer } from '@fortawesome/free-regular-svg-icons';
 import React, { useState } from 'react';
 import axios from 'axios';
+import { postData } from '../../apiService';
 function HomePage() {
-  const [username, setUserName] = useState('');
+    const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
   
     const handleLogin = async (e) => {
       e.preventDefault();
   
-      try {
+
         // Giriş isteği
-        const response = await axios.post("http://localhost:8080/user/login", {
+        const response = await postData("/user/login", {
           username,
           password
         });
-        console.log("Response:", response.data);
-        // Token'ı al
-        const token = response.data.token;
-  
-        // localStorage'a kaydet
-        localStorage.setItem("token", token);
   
         // yönlendir
         navigate("/userAbout");
-      } catch (err) {
-        alert("Giriş başarısız!");
-      }
+      
     };
   
   return (

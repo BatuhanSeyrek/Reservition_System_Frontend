@@ -11,30 +11,29 @@ function OwnerLogin() {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const response = await postData("/admin/login", {
-        username,
-        password
-      });
+  try {
+    const response = await postData("/admin/login", {
+      username,
+      password
+    });
 
-      console.log("response objesi:", response);
-      console.log("response.data:", response.data);
-      console.log("response.data.token:", response.data.token);
+    console.log("response objesi:", response);
+    console.log("response.token:", response.token);
 
-      if (!response.data.token) {
-        alert("Token bulunamadı!");
-        return;
-      }
-
-      localStorage.setItem("token", response.data.token);
-      navigate("/ownerAbout");
-    } catch (err) {
-      alert("Giriş başarısız!");
-      console.error(err);
+    if (!response.token) {
+      alert("Token bulunamadı!");
+      return;
     }
-  };
+
+    localStorage.setItem("token", response.token);
+    navigate("/ownerAbout");
+  } catch (err) {
+    alert("Giriş başarısız!");
+    console.error(err);
+  }
+};
 
   return (
     <div class="bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 min-h-screen flex flex-col items-center justify-center">

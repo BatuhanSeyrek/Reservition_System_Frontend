@@ -3,25 +3,24 @@ import Sidebar from './ownerSidebar';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPersonCirclePlus } from '@fortawesome/free-solid-svg-icons';
-import axiosInstance from '../../axiosConfig'; 
+import {getData} from '../../apiService';
 import axios from 'axios';
-function adminhome() {
-   const [employeeList, setEmployeeList] = useState([]);
-  const token = localStorage.getItem('token'); // Token'ı localStorage'dan al
-  useEffect(() => {
-    axios.get('http://localhost:8080/admin/employee/list', {
-  headers: {
-    Authorization: `Bearer ${token}`
-  }
-}) // <-- backend endpoint'ini buraya yaz
-      .then(res => {
-        setEmployeeList(res.data);
-        console.log("Çalışanlar:", res.data);
-      })
-      .catch(err => {
-        console.error("Çalışanlar çekilirken hata oluştu:", err);
-      });
-  }, []);
+function EmployeeList() {
+
+  const [employeeList, setEmployeeList] = useState([]);
+ useEffect(() => {
+  const fetchEmployees = async () => {
+    try {
+      const data = await getData("/admin/employee/list");
+      console.log("Gelen veri:", data); // bu hâlâ kalsın
+      setEmployeeList(data); // ✅ direkt data, çünkü array
+    } catch (error) {
+      console.error("Çalışan listesi alınırken hata:", error);
+    }
+  };
+
+  fetchEmployees();
+}, []);
 
 
   return (
@@ -54,4 +53,4 @@ function adminhome() {
   )
 }
 
-export default adminhome
+export default EmployeeList
