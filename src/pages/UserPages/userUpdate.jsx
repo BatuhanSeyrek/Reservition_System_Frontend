@@ -5,27 +5,26 @@ import axios from 'axios';
 import { putData } from '../../apiService'; // varsa bu şekilde içe aktar
 
 function UserUpdate() {
-  const token = localStorage.getItem('token');
   const [user, setUser] = useState({
-    email: "",
-    userName: "",
-    phoneNumber: "",
-    notificationType: "",
-    password: ""
+    id: '',
+    email: '',
+    phoneNumber: '',
+    notificationType: '',
+    userName:'',
   });
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
     if (!token) {
       alert("Lütfen giriş yapın.");
-      window.location.href = "/ownerLogin";
-      return;
+      window.location.href = "/userLogin";
     }
 
     axios.get('http://localhost:8080/user/myUser', {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => setUser(res.data))
-      .catch(err => console.error("Kullanıcı bilgileri alınırken hata oluştu:", err));
+      .catch(err => console.error("Admin bilgileri alınırken hata oluştu:", err));
   }, []);
 
   const handleChange = (e) => {
@@ -35,6 +34,7 @@ function UserUpdate() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('token');
 
     putData('/user/update', user)
       .then(() => {
@@ -43,14 +43,13 @@ function UserUpdate() {
           headers: { Authorization: `Bearer ${token}` }
         })
           .then(res => setUser(res.data))
-          .catch(err => console.error("Veri yenilenemedi:", err));
+          .catch(err => console.error("Admin bilgileri alınırken hata oluştu:", err));
       })
       .catch(err => {
         console.error("Güncelleme sırasında hata:", err);
         alert("Güncelleme sırasında hata oluştu.");
       });
   };
-
   return (
     <UserLayout>
       <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-lg mx-auto mt-10">
@@ -75,7 +74,7 @@ function UserUpdate() {
           <div>
             <label htmlFor="email" className="block text-sm font-semibold text-gray-700">Email</label>
             <input
-              type="email"
+              type="text"
               id="email"
               name="email"
               value={user.email}
@@ -88,7 +87,7 @@ function UserUpdate() {
           <div>
             <label htmlFor="phoneNumber" className="block text-sm font-semibold text-gray-700">Phone</label>
             <input
-              type="tel"
+              type="text"
               id="phoneNumber"
               name="phoneNumber"
               value={user.phoneNumber}
