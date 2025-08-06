@@ -16,10 +16,7 @@ function UserInformation() {
   useEffect(() => {
     const fetchUser = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const data = await axios.get('http://localhost:8080/admin/chair/list', {
-      headers: { Authorization: `Bearer ${token}` }
-    })
+      const data = await getData('/user/myUser')
       setUser(data);
     } catch (err) {
       console.error("Kullanıcı bilgileri alınırken hata oluştu:", err);
@@ -43,7 +40,7 @@ function UserInformation() {
           <p><span className="font-semibold text-gray-600">Email:</span> {user.email}</p>
           <p><span className="font-semibold text-gray-600">Phone:</span> {user.phoneNumber}</p>
           <p><span className="font-semibold text-gray-600">Notification:</span> {user.notificationType}</p>
-          <p><span className="font-semibold text-gray-600">Password:</span> {user.password}</p>
+
         </div>
       </div>
     </UserLayout>

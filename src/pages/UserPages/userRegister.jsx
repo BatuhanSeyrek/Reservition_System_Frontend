@@ -8,7 +8,7 @@ function userRegister() {
     userName: '',
     email: '',
     phoneNumber: '',
-    navigatetionType: '',
+    notificationType: "",
     password: '',
   });
 
@@ -59,11 +59,11 @@ function userRegister() {
         </div>
 
         <div>
-          <label for="navigatetionType" class="block text-sm font-semibold text-gray-700">Notification Type</label>
-          <select id="navigatetionType" name="navigatetionType" required onChange={handleChange} value={formData.navigatetionType}
+          <label for="notificationType" class="block text-sm font-semibold text-gray-700">Notification Type</label>
+          <select id="notificationType" name="notificationType" required onChange={handleChange} value={formData.notificationType}
             class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
             <option value="">Select...</option>
-            <option value="EMAIL">Email</option>
+            <option value="MAIL">Email</option>
             <option value="SMS">SMS</option>
             <option value="PUSH">Push</option>
           </select>

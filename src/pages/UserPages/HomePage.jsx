@@ -18,8 +18,7 @@ function HomePage() {
           username,
           password
         });
-  
-        // yönlendir
+        localStorage.setItem("token",response.token)
         navigate("/userAbout");
       
     };

@@ -1,23 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../navbar';
-import Sidebar from './ownerSidebar';
+import OwnerSidebar from '../AdminPages/ownerSidebar';
 import Footer from '../footer';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 
-function AdminLayout({ children }) {
+export default function AdminLayout({ children }) {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
   return (
     <div className="relative min-h-screen bg-gray-100">
-      {/* Navbar */}
+      {/* Header: Hamburger + Navbar */}
       <header className="fixed top-0 left-0 right-0 h-16 bg-gray-300 shadow-md z-50 flex items-center px-6">
-        <Navbar />
+        {/* Hamburger buton - HER EKRANDA görünür */}
+        <button
+          onClick={toggleSidebar}
+          className="p-2 rounded bg-gray-200 hover:bg-gray-300 mr-4"
+          aria-label="Toggle sidebar"
+        >
+          <FontAwesomeIcon icon={faBars} className="w-6 h-6 text-black" />
+        </button>
+
+        {/* Navbar içeriği her zaman görünür */}
+        <div className="flex-1">
+          <Navbar />
+        </div>
       </header>
 
-      {/* Sidebar */}
-      <aside className="fixed top-16 bottom-10 left-0 w-72 bg-white border-r border-gray-300 overflow-auto z-40">
-        <Sidebar />
-      </aside>
+      {/* Sidebar: Açık mı kapalı mı kontrolü ile */}
+      <OwnerSidebar isOpen={isSidebarOpen} />
 
-      {/* Main Content */}
-      <main className="ml-72 mt-16 mb-10 p-6 overflow-auto min-h-[calc(100vh-64px-40px)]">
+      {/* Ana içerik alanı */}
+      <main
+        className={`transition-all duration-300 ease-in-out ${
+          isSidebarOpen ? 'ml-72' : 'ml-0 '
+        } mt-16 mb-10 p-6 overflow-auto min-h-[calc(100vh-64px-40px)]`}
+      >
         {children}
       </main>
 
@@ -28,5 +47,3 @@ function AdminLayout({ children }) {
     </div>
   );
 }
-
-export default AdminLayout;

@@ -1,13 +1,34 @@
 import React from 'react';
 import UserLayout from './UserLayout'; // Yolun projene göre olabilir
-
+import { useEffect,useState } from 'react';
+import { deleteData, getData} from '../../apiService';
 function DeleteReservation() {
-  const reservations = [
-    { id: 1, userId: '123', chairId: 'A1', reservationDate: '2023-10-01', startTime: '10:00', endTime: '11:00' },
-    { id: 2, userId: '456', chairId: 'B2', reservationDate: '2023-10-02', startTime: '12:00', endTime: '13:00' },
-    { id: 3, userId: '789', chairId: 'C3', reservationDate: '2023-10-03', startTime: '14:00', endTime: '15:00' }
-  ];
-
+      const [reservations, setReservations] = useState([]);
+      const handleDelete = async (id) => {
+          if (window.confirm("Bu rezervasyonu silmek istediğinizden emin misiniz?")) {
+            try {
+              await deleteData(`/store/userReservationDelete/${id}`);
+              setReservations(reservations.filter(reservations => reservations.id !== id));
+              alert("Çalışan başarıyla silindi.");
+            } catch (err) {
+              console.error("Çalışan silinirken hata oluştu:", err);
+              alert("Silme işlemi sırasında hata oluştu: " + (err.response?.data || err.message));
+            }
+          }
+        };
+      useEffect(() => {
+        const fetchReservations = async () => {
+        try {
+          const data= await getData('/store/userReservationGet')
+          setReservations(data)
+        } catch (err) {
+          console.error("Kullanıcı bilgileri alınırken hata oluştu:", err);
+        }
+      };
+    
+      fetchReservations();
+    
+      }, []);
   return (
     <UserLayout>
       <div className="max-w-md mx-auto mt-1">
@@ -15,14 +36,15 @@ function DeleteReservation() {
         {reservations.map(reservation => (
           <div key={reservation.id} className="bg-white p-4 mb-4 border-2 border-black-200 rounded shadow flex">
             <div className="w-3/4">
-              <p><strong>User ID:</strong> {reservation.userId}</p>
-              <p><strong>Chair ID:</strong> {reservation.chairId}</p>
+              <p><strong>User Name:</strong> {reservation.userName}</p>
+              <p><strong>Chair Name:</strong> {reservation.chairName}</p>
               <p><strong>Reservation Date:</strong> {reservation.reservationDate}</p>
               <p><strong>Start Time:</strong> {reservation.startTime}</p>
               <p><strong>End Time:</strong> {reservation.endTime}</p>
+              {console.log("Silinecek reservation:", reservation)}
             </div>
             <div className="w-1/4 flex items-center justify-end">
-              <button className="ml-auto bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+              <button className="ml-auto bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600" onClick={() => handleDelete(reservation.id)}>
                 Delete
               </button>
             </div>

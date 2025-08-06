@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "https://9068a6e7bc9d.ngrok-free.app";
+const baseURL = "https://264494da2db8.ngrok-free.app";
 
 const axiosInstance = axios.create({
   baseURL: baseURL,
@@ -23,6 +23,7 @@ axiosInstance.interceptors.request.use(
     const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      config.headers['ngrok-skip-browser-warning']='true';
     }
     return config;
   },

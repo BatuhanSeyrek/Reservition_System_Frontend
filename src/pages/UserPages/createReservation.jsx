@@ -1,24 +1,56 @@
 import React, { useState } from 'react';
-import UserLayout from './UserLayout'; // Yolunu projenin yapısına göre ayarla
-
+import axios from 'axios';
+import UserLayout from './UserLayout'; // Yolunu projene göre ayarla
+import { postData } from '../../apiService';
 function CreateReservation() {
   const [reservation, setReservation] = useState({
-    userId: '',
     chairId: '',
     reservationDate: '',
-    startTime: '',
-    endTime: ''
+    startTime: ''
   });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setReservation(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // rezervasyon gönderme işlemleri burada yapılabilir
-    console.log("Yeni rezervasyon:", reservation);
+    setError('');
+    setSuccess('');
+    setLoading(true);
+
+    try {
+      // Backend'e gönderilecek data backend entity yapısına uygun olmalı
+      const data = {
+        
+        chairId:  Number(reservation.chairId) ,
+        reservationDate: reservation.reservationDate,
+        startTime: reservation.startTime , // "HH:mm:ss" formatı için
+        reminderSent: false
+      };
+
+       await postData(
+        '/store/create',
+        data
+      );
+
+      setSuccess('Rezervasyon başarıyla oluşturuldu!');
+      setReservation({
+        chairId: '',
+        reservationDate: '',
+        startTime: '',
+      });
+    } catch (err) {
+      setError('Rezervasyon oluşturulurken hata oluştu.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -27,16 +59,7 @@ function CreateReservation() {
         <h2 className="text-xl font-semibold mb-4">Yeni Rezervasyon Oluştur</h2>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <input
-            type="text"
-            name="userId"
-            placeholder="Kullanıcı ID"
-            value={reservation.userId}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
-          <input
-            type="text"
+            type="number"
             name="chairId"
             placeholder="Koltuk ID"
             value={reservation.chairId}
@@ -60,21 +83,16 @@ function CreateReservation() {
             className="w-full p-2 border rounded"
             required
           />
-          <input
-            type="time"
-            name="endTime"
-            value={reservation.endTime}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+            disabled={loading}
+            className={`w-full py-2 rounded text-white ${loading ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'}`}
           >
-            Rezervasyon Oluştur
+            {loading ? 'Gönderiliyor...' : 'Rezervasyon Oluştur'}
           </button>
         </form>
+        {error && <p className="mt-4 text-red-600">{error}</p>}
+        {success && <p className="mt-4 text-green-600">{success}</p>}
       </div>
     </UserLayout>
   );

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { deleteData } from '../../apiService';
+import { deleteData, getData, postData, putData } from '../../apiService';
 import AdminLayout from './AdminLayout';
 
 function ChairDeleteUpdate() {
@@ -30,28 +29,22 @@ function ChairDeleteUpdate() {
 
     try {
       if (editMode) {
-        await axios.put(`https://109da8a5c0f8.ngrok-free.app/admin/chair/update/${editChairId}`, {
+        await putData(`/admin/chair/update/${editChairId}`, {
           openingTime,
           closingTime,
           islemSuresi,
           chairName
-        }, {
-          headers: { Authorization: `Bearer ${token}` }
         });
 
-        const updatedList = await axios.get('http://localhost:8080/admin/chair/list', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setChairList(updatedList.data);
+        const updatedList = await getData('/admin/chair/list');
+        setChairList(updatedList.data || updatedList);
         alert("Koltuk başarıyla güncellendi.");
       } else {
-        const res = await axios.post("https://109da8a5c0f8.ngrok-free.app/admin/chair/chairAdd", {
+        const res = await postData("admin/chair/chairAdd", {
           openingTime,
           closingTime,
           islemSuresi,
           chairName
-        }, {
-          headers: { Authorization: `Bearer ${token}` }
         });
         setChairList(prevList => [...prevList, res.data]);
         alert("Koltuk başarıyla eklendi!");
@@ -65,6 +58,7 @@ function ChairDeleteUpdate() {
       setEditMode(false);
       setEditChairId(null);
     } catch (err) {
+      console.error("İşlem hatası:", err);
       alert("İşlem hatası: " + (err.response?.data || err.message));
     }
   };
@@ -83,11 +77,16 @@ function ChairDeleteUpdate() {
   };
 
   useEffect(() => {
-    axios.get('http://localhost:8080/admin/chair/list', {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(res => setChairList(res.data))
-      .catch(err => console.error("Listeleme hatası:", err));
+    const fetchChairs = async () => {
+      try {
+        const response = await getData('/admin/chair/list');
+        console.log('Chair list fetched:', response);
+        setChairList(response.data || response);
+      } catch (err) {
+        console.error("Liste çekme hatası:", err);
+      }
+    };
+    fetchChairs();
   }, [token]);
 
   return (
@@ -96,25 +95,29 @@ function ChairDeleteUpdate() {
         {/* Sol: Liste */}
         <div className="w-1/2">
           <h2 className="text-xl font-semibold mb-4">Chair Information</h2>
-          {chairList.map((chair) => (
-            <div key={chair.id} className="bg-white p-4 mb-4 border-2 border-black-200 rounded shadow flex">
-              <div className="w-3/4">
-                <p><strong>Chair ID:</strong> {chair.id}</p>
-                <p><strong>Chair Name:</strong> {chair.chairName}</p>
-                <p><strong>Opening Time:</strong> {chair.openingTime}</p>
-                <p><strong>Closing Time:</strong> {chair.closingTime}</p>
-                <p><strong>Processing Time:</strong> {chair.islemSuresi}</p>
+          {chairList && chairList.length > 0 ? (
+            chairList.map((chair) => (
+              <div key={chair.id} className="bg-white p-4 mb-4 border-2 border-black-200 rounded shadow flex">
+                <div className="w-3/4">
+                  <p><strong>Chair ID:</strong> {chair.id}</p>
+                  <p><strong>Chair Name:</strong> {chair.chairName}</p>
+                  <p><strong>Opening Time:</strong> {chair.openingTime}</p>
+                  <p><strong>Closing Time:</strong> {chair.closingTime}</p>
+                  <p><strong>Processing Time:</strong> {chair.islemSuresi}</p>
+                </div>
+                <div className="w-1/4 flex flex-col justify-center items-end gap-2 text-xl">
+                  <button onClick={() => handleEdit(chair)} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full">
+                    Edit
+                  </button>
+                  <button onClick={() => handleDelete(chair.id)} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-full">
+                    Delete
+                  </button>
+                </div>
               </div>
-              <div className="w-1/4 flex flex-col justify-center items-end gap-2 text-xl">
-                <button onClick={() => handleEdit(chair)} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full">
-                  Edit
-                </button>
-                <button onClick={() => handleDelete(chair.id)} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-full">
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p>Koltuk bulunamadı.</p>
+          )}
         </div>
 
         {/* Sağ: Form */}

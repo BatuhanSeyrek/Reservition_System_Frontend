@@ -8,47 +8,122 @@ import {
   faUserMinus,
   faWrench,
   faUsers,
-  faGear,
-  faRightFromBracket
 } from '@fortawesome/free-solid-svg-icons';
-import { NavLink } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
-function Sidebar() {
-  const menuItems = [
-    { to: "/userAbout", label: "About", icon: faCircleInfo },
-    { to: "/userInformation", label: "User Information", icon: faUsers },
-    { to: "/userUpdate", label: "User Update", icon: faWrench },
-    { to: "/allStores", label: "All Stores", icon: faUserTie },
-    { to: "/informationReservation", label: "Information Reservations", icon: faCircleQuestion },
-    { to: "/createReservation", label: "Create Reservation", icon: faUserPlus },
-    { to: "/deleteReservation", label: "Delete Reservations", icon: faUserMinus },
-    { to: "/userSettings", label: "Settings", icon: faGear }
-  ];
+function UserSidebar({ isOpen }) {
+  const { pathname } = useLocation(); // aktif path
 
   return (
-    <div className="h-full w-72 bg-white shadow-md p-6">
-      <h2 className="text-2xl font-bold mb-6 text-blue-600">User Panel</h2>
-      <ul className="space-y-2">
-        {menuItems.map(({ to, label, icon }) => (
-          <li key={to}>
-            <NavLink
-              to={to}
-              className={({ isActive }) =>
-                `flex items-center justify-between px-4 py-2 rounded-lg font-medium transition duration-200 ${
-                  isActive
-                    ? 'bg-blue-500 text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`
-              }
-            >
-              <span>{label}</span>
-              <FontAwesomeIcon icon={icon} className="ml-2" />
-            </NavLink>
-          </li>
-        ))}
+    <aside
+      className={`fixed top-16 bottom-10 left-0 w-72 bg-white border-r border-gray-200 shadow-xl z-40 px-5 py-6 overflow-y-auto transition-transform duration-300 ease-in-out
+      ${isOpen ? 'translate-x-0' : '-translate-x-full'} 2xl:translate-x-0`}
+    >
+      <h2 className="text-2xl font-semibold mb-8 text-blue-700 text-center tracking-wide">
+        User Panel
+      </h2>
+
+      <ul className="space-y-3">
+        <li>
+          <Link
+            to="/userAbout"
+            className={`flex items-center gap-3 px-4 py-2 rounded-md transition ${
+              pathname === '/userAbout'
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+            }`}
+          >
+            <FontAwesomeIcon icon={faCircleInfo} className="w-5 h-5" />
+            <span className="text-sm font-medium">About</span>
+          </Link>
+        </li>
+
+        <li>
+          <Link
+            to="/userInformation"
+            className={`flex items-center gap-3 px-4 py-2 rounded-md transition ${
+              pathname === '/userInformation'
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+            }`}
+          >
+            <FontAwesomeIcon icon={faUsers} className="w-5 h-5" />
+            <span className="text-sm font-medium">User Information</span>
+          </Link>
+        </li>
+
+        <li>
+          <Link
+            to="/userUpdate"
+            className={`flex items-center gap-3 px-4 py-2 rounded-md transition ${
+              pathname === '/userUpdate'
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+            }`}
+          >
+            <FontAwesomeIcon icon={faWrench} className="w-5 h-5" />
+            <span className="text-sm font-medium">User Update</span>
+          </Link>
+        </li>
+
+        <li>
+          <Link
+            to="/allStores"
+            className={`flex items-center gap-3 px-4 py-2 rounded-md transition ${
+              pathname === '/allStores'
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+            }`}
+          >
+            <FontAwesomeIcon icon={faUserTie} className="w-5 h-5" />
+            <span className="text-sm font-medium">All Stores</span>
+          </Link>
+        </li>
+
+        <li>
+          <Link
+            to="/informationReservation"
+            className={`flex items-center gap-3 px-4 py-2 rounded-md transition ${
+              pathname === '/informationReservation'
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+            }`}
+          >
+            <FontAwesomeIcon icon={faCircleQuestion} className="w-5 h-5" />
+            <span className="text-sm font-medium">Information Reservations</span>
+          </Link>
+        </li>
+
+        <li>
+          <Link
+            to="/createReservation"
+            className={`flex items-center gap-3 px-4 py-2 rounded-md transition ${
+              pathname === '/createReservation'
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+            }`}
+          >
+            <FontAwesomeIcon icon={faUserPlus} className="w-5 h-5" />
+            <span className="text-sm font-medium">Create Reservation</span>
+          </Link>
+        </li>
+
+        <li>
+          <Link
+            to="/deleteReservation"
+            className={`flex items-center gap-3 px-4 py-2 rounded-md transition ${
+              pathname === '/deleteReservation'
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+            }`}
+          >
+            <FontAwesomeIcon icon={faUserMinus} className="w-5 h-5" />
+            <span className="text-sm font-medium">Delete Reservations</span>
+          </Link>
+        </li>
       </ul>
-    </div>
+    </aside>
   );
 }
 
-export default Sidebar;
+export default UserSidebar;
