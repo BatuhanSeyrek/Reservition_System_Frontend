@@ -36,6 +36,7 @@ function DeleteReservation() {
         {reservations.map(reservation => (
           <div key={reservation.id} className="bg-white p-4 mb-4 border-2 border-black-200 rounded shadow flex">
             <div className="w-3/4">
+              <p><strong>Store Name:</strong> {reservation.storeName}</p>
               <p><strong>User Name:</strong> {reservation.userName}</p>
               <p><strong>Chair Name:</strong> {reservation.chairName}</p>
               <p><strong>Reservation Date:</strong> {reservation.reservationDate}</p>

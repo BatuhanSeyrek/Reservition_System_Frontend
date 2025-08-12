@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { putData } from '../../apiService';
 import AdminLayout from './AdminLayout';
+import { getData, putData } from '../../apiService';
 
 function OwnerUpdate() {
   const [admin, setAdmin] = useState({
@@ -12,17 +11,20 @@ function OwnerUpdate() {
   });
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      alert("Lütfen giriş yapın.");
-      window.location.href = "/ownerLogin";
+    async function fetchAdmin() {
+      try {
+        const data = await getData('/admin/myAdmin');
+        setAdmin({
+          id: data.id || '',
+          adminName: data.adminName || '',
+          password: '', // güvenlik nedeniyle şifreyi boş bırakıyoruz
+          storeName: data.storeName || '',
+        });
+      } catch (error) {
+        console.error('Admin verisi çekilemedi:', error);
+      }
     }
-
-    axios.get('http://localhost:8080/admin/myAdmin', {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(res => setAdmin(res.data))
-      .catch(err => console.error("Admin bilgileri alınırken hata oluştu:", err));
+    fetchAdmin();
   }, []);
 
   const handleChange = (e) => {
@@ -30,23 +32,23 @@ function OwnerUpdate() {
     setAdmin(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
+    try {
+      await putData('/admin/update', admin);
+      alert('Bilgiler başarıyla güncellendi.');
 
-    putData('/admin/update', admin)
-      .then(() => {
-        alert("Bilgiler başarıyla güncellendi.");
-        axios.get('http://localhost:8080/admin/myAdmin', {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-          .then(res => setAdmin(res.data))
-          .catch(err => console.error("Admin bilgileri alınırken hata oluştu:", err));
-      })
-      .catch(err => {
-        console.error("Güncelleme sırasında hata:", err);
-        alert("Güncelleme sırasında hata oluştu.");
+      const data = await getData('/admin/myAdmin');
+      setAdmin({
+        id: data.id || '',
+        adminName: data.adminName || '',
+        password: '',
+        storeName: data.storeName || '',
       });
+    } catch (error) {
+      console.error('Güncelleme sırasında hata:', error);
+      alert('Güncelleme sırasında hata oluştu.');
+    }
   };
 
   return (

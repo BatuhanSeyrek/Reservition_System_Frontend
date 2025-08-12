@@ -12,6 +12,21 @@ function ChairDeleteUpdate() {
   const [editMode, setEditMode] = useState(false);
   const [editChairId, setEditChairId] = useState(null);
 
+  // Backend'in beklediği formata çevir (HH:mm → HH:mm:ss)
+  const formatTime = (timeStr) => {
+    if (!timeStr) return "";
+    return timeStr.length === 5 ? timeStr + ":00" : timeStr;
+  };
+
+  const fetchChairs = async () => {
+    try {
+      const response = await getData('/admin/chair/chairget');
+      setChairList(response.data || response);
+    } catch (err) {
+      console.error("Liste çekme hatası:", err);
+    }
+  };
+
   const handleEdit = (chair) => {
     setEditMode(true);
     setEditChairId(chair.id);
@@ -28,27 +43,23 @@ function ChairDeleteUpdate() {
     }
 
     try {
-      if (editMode) {
-        await putData(`/admin/chair/update/${editChairId}`, {
-          openingTime,
-          closingTime,
-          islemSuresi,
-          chairName
-        });
+      const chairData = {
+        openingTime: formatTime(openingTime),
+        closingTime: formatTime(closingTime),
+        islemSuresi: formatTime(islemSuresi),
+        chairName
+      };
 
-        const updatedList = await getData('/admin/chair/list');
-        setChairList(updatedList.data || updatedList);
+      if (editMode) {
+        await putData(`/admin/chair/update/${editChairId}`, chairData);
         alert("Koltuk başarıyla güncellendi.");
       } else {
-        const res = await postData("admin/chair/chairAdd", {
-          openingTime,
-          closingTime,
-          islemSuresi,
-          chairName
-        });
-        setChairList(prevList => [...prevList, res.data]);
+        await postData("/admin/chair/chairAdd", chairData);
         alert("Koltuk başarıyla eklendi!");
       }
+
+      // Listeyi yeniden çek
+      await fetchChairs();
 
       // Reset
       setOpeningTime('');
@@ -77,15 +88,6 @@ function ChairDeleteUpdate() {
   };
 
   useEffect(() => {
-    const fetchChairs = async () => {
-      try {
-        const response = await getData('/admin/chair/list');
-        console.log('Chair list fetched:', response);
-        setChairList(response.data || response);
-      } catch (err) {
-        console.error("Liste çekme hatası:", err);
-      }
-    };
     fetchChairs();
   }, [token]);
 
@@ -99,7 +101,6 @@ function ChairDeleteUpdate() {
             chairList.map((chair) => (
               <div key={chair.id} className="bg-white p-4 mb-4 border-2 border-black-200 rounded shadow flex">
                 <div className="w-3/4">
-                  <p><strong>Chair ID:</strong> {chair.id}</p>
                   <p><strong>Chair Name:</strong> {chair.chairName}</p>
                   <p><strong>Opening Time:</strong> {chair.openingTime}</p>
                   <p><strong>Closing Time:</strong> {chair.closingTime}</p>

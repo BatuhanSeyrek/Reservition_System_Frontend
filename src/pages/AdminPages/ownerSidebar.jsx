@@ -17,7 +17,7 @@ function OwnerSidebar({ isOpen }) {
       <h2 className="text-2xl font-bold mb-6 text-blue-600">Admin Panel</h2>
       <ul className="space-y-4">
         <li className="text-gray-700 hover:text-blue-600">
-          <Link to="/about" className="flex items-center gap-2">
+          <Link to="/ownerAbout" className="flex items-center gap-2">
             <FontAwesomeIcon icon={faCircleInfo} />
             <span>About</span>
             
@@ -34,8 +34,7 @@ function OwnerSidebar({ isOpen }) {
         
         <li className="text-gray-700 hover:text-blue-600">
           <Link to="/chairDeleteUpdate" className="flex items-center gap-2">
-            <FontAwesomeIcon icon={faWrench} />
-            <FontAwesomeIcon icon={faTrashCan} />
+            <FontAwesomeIcon icon={faChair} />
             <span>Chair Delete Update</span>
             
           </Link>
@@ -51,14 +50,6 @@ function OwnerSidebar({ isOpen }) {
           <Link to="/ownerInformation" className="flex items-center gap-2">
             <FontAwesomeIcon icon={faCircleQuestion} />
             <span>Admin Information</span>
-            
-          </Link>
-        </li>
-        
-        <li className="text-gray-700 hover:text-blue-600">
-          <Link to="/ownerDelete" className="flex items-center gap-2">
-            <FontAwesomeIcon icon={faTrashCan} />
-            <span>Admin Delete</span>
             
           </Link>
         </li>

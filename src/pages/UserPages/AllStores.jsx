@@ -1,26 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPersonCirclePlus } from '@fortawesome/free-solid-svg-icons';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import UserLayout from './UserLayout';
-import axios from 'axios';
 import { getData } from '../../apiService';
 
 function AllStores() {
   const [adminList, setAdminList] = useState([]);
+
   useEffect(() => {
-     const fetchAdmin = async () => {
-     try {
-       const data = await getData('/admin/list')
-       setAdminList(data);
-     } catch (err) {
-       console.error("Kullanıcı bilgileri alınırken hata oluştu:", err);
-     }
-   };
- 
-   fetchAdmin();
- 
-   }, []);
+    const fetchAdmin = async () => {
+      try {
+        const data = await getData('/admin/list');
+        setAdminList(data);
+      } catch (err) {
+        console.error("Kullanıcı bilgileri alınırken hata oluştu:", err);
+      }
+    };
+    fetchAdmin();
+  }, []);
+
   return (
     <UserLayout>
       <div className="p-6">

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import UserLayout from './UserLayout'; // Yoluna göre güncelle
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+
 import { getData, putData } from '../../apiService'; // varsa bu şekilde içe aktar
 
 function UserUpdate() {
-  const navigate = useNavigate();
+
   const [user, setUser] = useState({
     id: '',
     email: '',
@@ -126,7 +126,7 @@ function UserUpdate() {
               className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg"
             >
               <option value="">Select...</option>
-              <option value="EMAIL">Email</option>
+              <option value="MAIL">Email</option>
               <option value="SMS">SMS</option>
               <option value="PUSH">Push</option>
             </select>

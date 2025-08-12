@@ -23,6 +23,7 @@ import OwnerInformation  from './pages/AdminPages/ownerInformation';
 import ChairToEmployee from './pages/AdminPages/chairToEmployee';
 import OwnerDelete from './pages/AdminPages/ownerDelete';
 import OwnerAbout from './pages/AdminPages/ownerAbout';
+import UpdateDeleteReservation from './pages/UserPages/updateDeleteReservation'
 function App() {
   return (
     <Router>
@@ -33,8 +34,9 @@ function App() {
         <Route path="/userRegister" element={<UserRegister />} />
         <Route path="/userhome" element={<UserHome />} />
         <Route path="/userAbout" element={<UserAbout/>} />
+        <Route path='/ownerAbout' element={<OwnerAbout/>} />
         <Route path="/allStores" element={<AllStores/>} />
-        <Route path="/reservation" element={<Reservation />} />
+        <Route path="/reservation/:adminId" element={<Reservation />} />
         <Route path="/createReservation" element={<CreateReservation/>} />
         <Route path="/informationReservation" element={<InformationReservation/>} />
         <Route path="/deleteReservation" element={<DeleteReservation />} />
@@ -50,7 +52,7 @@ function App() {
         <Route path='/ownerInformation' element={<OwnerInformation/>}/>
         <Route path='/chairToEmployee' element={<ChairToEmployee/>}/>
         <Route path='/ownerDelete' element={<OwnerDelete/>}/>
-        <Route path='/ownerAbout' element={<OwnerAbout/>}/>
+        <Route path='/reservationUpdateDelete' element={<UpdateDeleteReservation/>} />
       </Routes>
     </Router>
   );

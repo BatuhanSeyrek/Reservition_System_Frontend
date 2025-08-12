@@ -2,44 +2,36 @@ import { useNavigate, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandPointer } from '@fortawesome/free-regular-svg-icons';
 import React, { useState } from 'react';
-import {postData } from '../../apiService';
+import axios from 'axios';
+import { postData } from '../../apiService';
+
 
 
 function OwnerLogin() {
-  const [username, setUserName] = useState('');
+const [username, setusername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-  e.preventDefault();
-
-  try {
-    const response = await postData("/admin/login", {
-      username,
-      password
-    });
-
-    console.log("response objesi:", response);
-    console.log("response.token:", response.token);
-
-    if (!response.token) {
-      alert("Token bulunamadı!");
-      return;
-    }
-
-    localStorage.setItem("token", response.token);
-    navigate("/ownerAbout");
-  } catch (err) {
-    alert("Giriş başarısız!");
-    console.error(err);
-  }
-};
+       e.preventDefault();
+   
+ 
+         // Giriş isteği
+         const response = await postData("/admin/login", {
+           username,
+           password
+         });
+         localStorage.setItem("token",response.token)
+         navigate("/ownerAbout");
+       
+     };
+   
 
   return (
     <div class="bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 min-h-screen flex flex-col items-center justify-center">
       <div className="bg-white p-2 rounded-2xl shadow-md w-full max-w-md mb-2">
               <Link to="/" className="flex items-center justify-center text-blue-600 hover:underline">
-                for admin click here<FontAwesomeIcon icon={faHandPointer} />
+                for user click here<FontAwesomeIcon icon={faHandPointer} />
               </Link>
       </div>
       
@@ -49,7 +41,7 @@ function OwnerLogin() {
     <form onSubmit={handleLogin} class="space-y-4">
       <div>
         <label for="username" class="block text-sm font-medium text-gray-700">Admin Name</label>
-        <input type="text" id="username" name="username" required onChange={e => setUserName(e.target.value)} value={username}
+        <input type="text" id="username" name="username" required onChange={e => setusername(e.target.value)} value={username}
           class="mt-1 w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500" />
       </div>
 
@@ -65,7 +57,7 @@ function OwnerLogin() {
           <input type="checkbox" class="form-checkbox text-gray-600" />
           <span class="ml-2 text-sm text-gray-600">Remember me</span>
         </label>
-        <a href="#" class="text-sm text-gray-500 hover:underline">Forgot password?</a>
+    
       </div>
 
       <button type="submit"

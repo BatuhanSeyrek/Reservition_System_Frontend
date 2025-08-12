@@ -3,9 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCircleInfo,
   faUserTie,
-  faUserPlus,
-  faCircleQuestion,
-  faUserMinus,
+  faBookAtlas,
   faWrench,
   faUsers,
 } from '@fortawesome/free-solid-svg-icons';
@@ -79,48 +77,20 @@ function UserSidebar({ isOpen }) {
             <span className="text-sm font-medium">All Stores</span>
           </Link>
         </li>
-
         <li>
           <Link
-            to="/informationReservation"
+            to="/reservationUpdateDelete"
             className={`flex items-center gap-3 px-4 py-2 rounded-md transition ${
-              pathname === '/informationReservation'
+              pathname === '/reservationUpdateDelete'
                 ? 'bg-blue-600 text-white'
                 : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
             }`}
           >
-            <FontAwesomeIcon icon={faCircleQuestion} className="w-5 h-5" />
-            <span className="text-sm font-medium">Information Reservations</span>
+            <FontAwesomeIcon icon={faBookAtlas} className="w-5 h-5" />
+            <span className="text-sm font-medium">Reservation</span>
           </Link>
         </li>
-
-        <li>
-          <Link
-            to="/createReservation"
-            className={`flex items-center gap-3 px-4 py-2 rounded-md transition ${
-              pathname === '/createReservation'
-                ? 'bg-blue-600 text-white'
-                : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
-            }`}
-          >
-            <FontAwesomeIcon icon={faUserPlus} className="w-5 h-5" />
-            <span className="text-sm font-medium">Create Reservation</span>
-          </Link>
-        </li>
-
-        <li>
-          <Link
-            to="/deleteReservation"
-            className={`flex items-center gap-3 px-4 py-2 rounded-md transition ${
-              pathname === '/deleteReservation'
-                ? 'bg-blue-600 text-white'
-                : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
-            }`}
-          >
-            <FontAwesomeIcon icon={faUserMinus} className="w-5 h-5" />
-            <span className="text-sm font-medium">Delete Reservations</span>
-          </Link>
-        </li>
+      
       </ul>
     </aside>
   );
