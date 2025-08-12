@@ -83,7 +83,7 @@ export default function ChairAvailabilityPage() {
         {/* Başlık solda - Tarih seçici sağda */}
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">
-            Sandalye Müsaitlik Durumu (Admin ID: {adminId})
+            Sandalye Müsaitlik Durumu 
           </h2>
 
           <div className="flex items-center gap-2">

@@ -24,18 +24,30 @@ function UserSidebar({ isOpen }) {
       <ul className="space-y-3">
         <li>
           <Link
-            to="/userAbout"
+            to="/allStores"
             className={`flex items-center gap-3 px-4 py-2 rounded-md transition ${
-              pathname === '/userAbout'
+              pathname === '/allStores'
                 ? 'bg-blue-600 text-white'
                 : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
             }`}
           >
-            <FontAwesomeIcon icon={faCircleInfo} className="w-5 h-5" />
-            <span className="text-sm font-medium">About</span>
+            <FontAwesomeIcon icon={faUserTie} className="w-5 h-5" />
+            <span className="text-sm font-medium">All Stores</span>
           </Link>
         </li>
-
+        <li>
+          <Link
+            to="/reservationUpdateDelete"
+            className={`flex items-center gap-3 px-4 py-2 rounded-md transition ${
+              pathname === '/reservationUpdateDelete'
+                ? 'bg-blue-600 text-white'
+                : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+            }`}
+          >
+            <FontAwesomeIcon icon={faBookAtlas} className="w-5 h-5" />
+            <span className="text-sm font-medium">Reservation</span>
+          </Link>
+        </li>
         <li>
           <Link
             to="/userInformation"
@@ -64,32 +76,7 @@ function UserSidebar({ isOpen }) {
           </Link>
         </li>
 
-        <li>
-          <Link
-            to="/allStores"
-            className={`flex items-center gap-3 px-4 py-2 rounded-md transition ${
-              pathname === '/allStores'
-                ? 'bg-blue-600 text-white'
-                : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
-            }`}
-          >
-            <FontAwesomeIcon icon={faUserTie} className="w-5 h-5" />
-            <span className="text-sm font-medium">All Stores</span>
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/reservationUpdateDelete"
-            className={`flex items-center gap-3 px-4 py-2 rounded-md transition ${
-              pathname === '/reservationUpdateDelete'
-                ? 'bg-blue-600 text-white'
-                : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
-            }`}
-          >
-            <FontAwesomeIcon icon={faBookAtlas} className="w-5 h-5" />
-            <span className="text-sm font-medium">Reservation</span>
-          </Link>
-        </li>
+        
       
       </ul>
     </aside>

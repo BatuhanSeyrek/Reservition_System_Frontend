@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import HomePage from  './pages/UserPages/HomePage';
 import OwnerLogin from './pages/AdminPages/ownerLogin';
 import OwnerRegister from './pages/AdminPages/ownerRegister';
@@ -23,10 +24,34 @@ import OwnerInformation  from './pages/AdminPages/ownerInformation';
 import ChairToEmployee from './pages/AdminPages/chairToEmployee';
 import OwnerDelete from './pages/AdminPages/ownerDelete';
 import OwnerAbout from './pages/AdminPages/ownerAbout';
-import UpdateDeleteReservation from './pages/UserPages/updateDeleteReservation'
+import UpdateDeleteReservation from './pages/UserPages/updateDeleteReservation';
+
+function PreventBackNavigation() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    window.history.pushState(null, '', location.pathname);
+
+    const handlePopState = () => {
+      // Geri tuşuna basınca mevcut sayfada kal
+      navigate(0); // sayfayı yeniler
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [location, navigate]);
+
+  return null;
+}
+
 function App() {
   return (
     <Router>
+      <PreventBackNavigation />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/ownerLogin" element={<OwnerLogin />} />

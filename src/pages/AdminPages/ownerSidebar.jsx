@@ -16,13 +16,6 @@ function OwnerSidebar({ isOpen }) {
     >
       <h2 className="text-2xl font-bold mb-6 text-blue-600">Admin Panel</h2>
       <ul className="space-y-4">
-        <li className="text-gray-700 hover:text-blue-600">
-          <Link to="/ownerAbout" className="flex items-center gap-2">
-            <FontAwesomeIcon icon={faCircleInfo} />
-            <span>About</span>
-            
-          </Link>
-        </li>
 
         <li className="text-gray-700 hover:text-blue-600">
           <Link to="/employeeDeleteUpdate" className="flex items-center gap-2">
