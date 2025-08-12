@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { deleteData, getData, postData, putData } from '../../apiService';
+import { deleteData, getData, putData } from '../../apiService';
 import UserLayout from './UserLayout';
 
 function ReservationDeleteUpdate() {
@@ -125,13 +125,8 @@ function ReservationDeleteUpdate() {
         startTime
       };
 
-      if (editMode) {
-        await putData(`/store/reservationUpdate/${editReservationId}`, payload);
-        alert("Rezervasyon başarıyla güncellendi.");
-      } else {
-        await postData("/store/create", payload);
-        alert("Rezervasyon başarıyla eklendi!");
-      }
+      await putData(`/store/reservationUpdate/${editReservationId}`, payload);
+      alert("Rezervasyon başarıyla güncellendi.");
 
       await fetchReservations();
 
@@ -198,81 +193,81 @@ function ReservationDeleteUpdate() {
           ))}
         </div>
 
-        {/* Sağ: Form */}
-        <div className="w-1/2 bg-white p-6 rounded shadow">
-          <h2 className="text-xl font-semibold mb-4">{editMode ? "Edit Reservation" : "Create Reservation"}</h2>
-          <form className="space-y-4" onSubmit={handleSubmit}>
+        {/* Sağ: Sadece edit modunda form göster */}
+        {editMode && (
+          <div className="w-1/2 bg-white p-6 rounded shadow">
+            <h2 className="text-xl font-semibold mb-4">Edit Reservation</h2>
+            <form className="space-y-4" onSubmit={handleSubmit}>
 
-            <div>
-              <label className="block text-sm font-semibold text-gray-700">Select Store</label>
-              <select
-                value={selectedStoreId}
-                onChange={handleStoreChange}
-                className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg"
-                required
-              >
-                <option value="">-- Select Store --</option>
-                {storeList.map((store, index) => (
-                  <option key={store.id ?? index} value={store.id}>
-                    {store.storeName}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-gray-700">Select Chair</label>
-              <select
-                value={selectedChairId}
-                onChange={(e) => setSelectedChairId(e.target.value)}
-                className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg"
-                disabled={!selectedStoreId}
-                required
-              >
-                <option value="">-- Select Chair --</option>
-                {Array.isArray(chairList) && chairList.length > 0 ? (
-                  chairList.map((chair, index) => (
-                    <option key={chair.id ?? index} value={chair.id}>
-                      {chair.chairName}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700">Select Store</label>
+                <select
+                  value={selectedStoreId}
+                  onChange={handleStoreChange}
+                  className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg"
+                  required
+                >
+                  <option value="">-- Select Store --</option>
+                  {storeList.map((store, index) => (
+                    <option key={store.id ?? index} value={store.id}>
+                      {store.storeName}
                     </option>
-                  ))
-                ) : (
-                  <option disabled>Chair bulunamadı</option>
-                )}
-              </select>
-            </div>
+                  ))}
+                </select>
+              </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-gray-700">Reservation Date</label>
-              <input
-                type="date"
-                value={reservationDate}
-                onChange={(e) => setReservationDate(e.target.value)}
-                className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg"
-                required
-              />
-            </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700">Select Chair</label>
+                <select
+                  value={selectedChairId}
+                  onChange={(e) => setSelectedChairId(e.target.value)}
+                  className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg"
+                  disabled={!selectedStoreId}
+                  required
+                >
+                  <option value="">-- Select Chair --</option>
+                  {Array.isArray(chairList) && chairList.length > 0 ? (
+                    chairList.map((chair, index) => (
+                      <option key={chair.id ?? index} value={chair.id}>
+                        {chair.chairName}
+                      </option>
+                    ))
+                  ) : (
+                    <option disabled>Chair bulunamadı</option>
+                  )}
+                </select>
+              </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-gray-700">Start Time</label>
-              <input
-                type="time"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-                className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg"
-                required
-              />
-            </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700">Reservation Date</label>
+                <input
+                  type="date"
+                  value={reservationDate}
+                  onChange={(e) => setReservationDate(e.target.value)}
+                  className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg"
+                  required
+                />
+              </div>
 
-            <div className="flex gap-4">
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition"
-              >
-                {editMode ? "Update" : "Create"}
-              </button>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700">Start Time</label>
+                <input
+                  type="time"
+                  value={startTime}
+                  onChange={(e) => setStartTime(e.target.value)}
+                  className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg"
+                  required
+                />
+              </div>
 
-              {editMode && (
+              <div className="flex gap-4">
+                <button
+                  type="submit"
+                  className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition"
+                >
+                  Update
+                </button>
+
                 <button
                   type="button"
                   onClick={() => {
@@ -287,10 +282,10 @@ function ReservationDeleteUpdate() {
                 >
                   Cancel
                 </button>
-              )}
-            </div>
-          </form>
-        </div>
+              </div>
+            </form>
+          </div>
+        )}
       </div>
     </UserLayout>
   );
