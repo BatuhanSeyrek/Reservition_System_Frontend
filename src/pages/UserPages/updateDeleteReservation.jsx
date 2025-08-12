@@ -46,7 +46,19 @@ function ReservationDeleteUpdate() {
     }
     try {
       const res = await getData(`/store/chairgetbystore/${storeId}`);
-      setChairList(res.data || res);
+      const chairsData = res.data || res;
+
+      // Döngüsel referansı kırmak için employee içindeki chair alanını siliyoruz
+      const cleanedChairs = chairsData.map(chair => {
+        if (chair.employee) {
+          const emp = { ...chair.employee };
+          delete emp.chair; // Sonsuz döngüyü kırıyoruz
+          return { ...chair, employee: emp };
+        }
+        return chair;
+      });
+
+      setChairList(cleanedChairs);
     } catch (err) {
       console.error("Chair listesi çekilirken hata:", err);
       setChairList([]);
@@ -95,7 +107,7 @@ function ReservationDeleteUpdate() {
     setSelectedStoreId(reservation.storeId?.toString() || '');
     setReservationDate(reservation.reservationDate || '');
     setStartTime(reservation.startTime || '');
-    // selectedChairId burada setlenmiyor, useEffect görevi devralıyor
+    // selectedChairId burada useEffect tarafından setleniyor
   };
 
   const handleSubmit = async (e) => {
@@ -218,11 +230,15 @@ function ReservationDeleteUpdate() {
                 required
               >
                 <option value="">-- Select Chair --</option>
-                {chairList.map((chair, index) => (
-                  <option key={chair.id ?? index} value={chair.id}>
-                    {chair.chairName}
-                  </option>
-                ))}
+                {Array.isArray(chairList) && chairList.length > 0 ? (
+                  chairList.map((chair, index) => (
+                    <option key={chair.id ?? index} value={chair.id}>
+                      {chair.chairName}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>Chair bulunamadı</option>
+                )}
               </select>
             </div>
 
