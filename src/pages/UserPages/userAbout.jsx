@@ -1,35 +1,38 @@
 import React from 'react';
 import UserLayout from './UserLayout';
 
-
 function About() {
   return (
     <UserLayout>
       <div className="min-h-screen bg-gray-100 py-12 px-6">
         <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-10">
-          <h1 className="text-3xl font-bold text-blue-600 mb-4">Hakkımızda</h1>
+          <h1 className="text-3xl font-bold text-blue-600 mb-4">About Us</h1>
           <p className="text-gray-700 text-lg mb-6">
-            Rezervasyon Sistemimiz, kullanıcıların kolay ve hızlı bir şekilde uygun zaman dilimlerinde rezervasyon yapmalarını sağlayan modern bir web uygulamasıdır. Kullanıcı dostu arayüzü sayesinde, yönetici ve kullanıcılar arasında sorunsuz bir iletişim köprüsü kurar.
+            Our Reservation System is a modern web application that enables users to quickly and easily book available time slots. 
+            With its intuitive, user-friendly interface, the system bridges the communication gap between administrators and users, 
+            ensuring a smooth and efficient booking experience.
           </p>
 
-          <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-3">Öne Çıkan Özellikler</h2>
+          <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-3">Key Features</h2>
           <ul className="list-disc list-inside text-gray-700 space-y-2">
-            <li>Kullanıcı ve yönetici için ayrı giriş sistemi</li>
-            <li>JWT tabanlı güvenli kimlik doğrulama</li>
-            <li>Rezervasyon zaman çakışmalarını önleyen algoritma</li>
-            <li>30 dakika kala otomatik e-posta bildirimi</li>
-            <li>Kolay yönetim paneli ile admin işlemleri</li>
-            <li>Esnek zaman aralığı tanımlamaları</li>
+            <li>Separate login systems for users and administrators</li>
+            <li>Secure JWT-based authentication</li>
+            <li>Algorithm to prevent booking time conflicts</li>
+            <li>Automatic email notifications sent 30 minutes before appointments</li>
+            <li>Easy-to-use admin panel for efficient management</li>
+            <li>Flexible time slot definitions</li>
           </ul>
 
-          <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-3">Teknolojiler</h2>
+          <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-3">Technologies</h2>
           <p className="text-gray-700">
-            Uygulama; <span className="font-medium">Spring Boot, React.js, PostgreSQL</span> gibi güncel teknolojiler kullanılarak geliştirilmiştir. Arayüz tasarımında <span className="font-medium">Tailwind CSS</span> tercih edilmiştir.
+            The application is developed using modern technologies such as <span className="font-medium">Spring Boot, React.js, and PostgreSQL</span>. 
+            For UI design, we have chosen <span className="font-medium">Tailwind CSS</span> to ensure both performance and aesthetic appeal.
           </p>
 
-          <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-3">Amacımız</h2>
+          <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-3">Our Mission</h2>
           <p className="text-gray-700">
-            Hedefimiz; randevu süreçlerini dijitalleştirerek manuel işlemleri ortadan kaldırmak ve kullanıcıların zaman yönetimini en verimli şekilde yapmalarını sağlamaktır.
+            Our mission is to fully digitalize the appointment process, eliminating manual operations and enabling users to manage their time 
+            in the most efficient way possible.
           </p>
         </div>
       </div>

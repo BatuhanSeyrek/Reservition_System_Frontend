@@ -9,7 +9,7 @@ export default function ChairAvailabilityPage() {
   const [availableDates, setAvailableDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
 
-  // Veri çekme
+  // Fetch data
   useEffect(() => {
     fetchReservations();
   }, [adminId]);
@@ -25,13 +25,13 @@ export default function ChairAvailabilityPage() {
       setAvailableDates(firstSevenDays);
       setSelectedDate((prev) => prev || firstSevenDays[0] || "");
     } catch (err) {
-      console.error("Veri alınırken hata oluştu:", err);
+      console.error("Error fetching data:", err);
     }
   };
 
   const handleReservationClick = async (chairId, time) => {
     const confirmCreate = window.confirm(
-      `${selectedDate} tarihinde ${time} saati için rezervasyon oluşturmak istediğinize emin misiniz?`
+      `Are you sure you want to create a reservation for ${selectedDate} at ${time}?`
     );
     if (!confirmCreate) return;
 
@@ -44,9 +44,9 @@ export default function ChairAvailabilityPage() {
       };
 
       await postData("/store/create", payload);
-      alert("Rezervasyon başarıyla oluşturuldu!");
+      alert("Reservation created successfully!");
 
-      // Listeyi state üzerinden güncelle
+      // Update the list directly from state
       setReservation((prev) =>
         prev.map((res) =>
           res.chairId === chairId
@@ -56,7 +56,7 @@ export default function ChairAvailabilityPage() {
                   ...res.slots,
                   [selectedDate]: {
                     ...res.slots[selectedDate],
-                    [time]: false, // Müsaitliği false yap
+                    [time]: false, // Mark as unavailable
                   },
                 },
               }
@@ -64,15 +64,15 @@ export default function ChairAvailabilityPage() {
         )
       );
     } catch (err) {
-      console.error("Rezervasyon hatası:", err);
-      alert("Rezervasyon sırasında bir hata oluştu!");
+      console.error("Reservation error:", err);
+      alert("An error occurred while creating the reservation!");
     }
   };
 
   if (!reservation.length) {
     return (
       <UserLayout>
-        <div className="p-6">Kayıt bulunamadı.</div>
+        <div className="p-6">No records found.</div>
       </UserLayout>
     );
   }
@@ -80,15 +80,13 @@ export default function ChairAvailabilityPage() {
   return (
     <UserLayout>
       <div className="p-6">
-        {/* Başlık solda - Tarih seçici sağda */}
+        {/* Title on the left - Date selector on the right */}
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold">
-            Sandalye Müsaitlik Durumu 
-          </h2>
+          <h2 className="text-xl font-semibold">Chair Availability</h2>
 
           <div className="flex items-center gap-2">
             <label htmlFor="dateSelect" className="font-medium">
-              Tarih Seç:
+              Select Date:
             </label>
             <select
               id="dateSelect"
@@ -105,7 +103,7 @@ export default function ChairAvailabilityPage() {
           </div>
         </div>
 
-        {/* Sandalyeler yan yana */}
+        {/* Chairs displayed in a grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {reservation.map((res) => (
             <div
