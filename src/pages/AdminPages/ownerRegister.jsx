@@ -7,7 +7,8 @@ function OwnerRegister() {
   const [formData, setFormData] = useState({
     adminName: '',
     password: '',
-    storeName: ''
+    storeName: '',
+    phoneNumber: ''
   });
 
   const navigate = useNavigate();
@@ -51,6 +52,12 @@ function OwnerRegister() {
         <div>
           <label for="storeName" class="block text-sm font-semibold text-gray-700">Store Name</label>
           <input type="text" id="storeName" name="storeName" required  value={formData.storeName} onChange={handleChange}
+            class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500" />
+        </div>
+
+        <div>
+          <label for="phoneNumber" class="block text-sm font-semibold text-gray-700">Phone Number</label>
+          <input type="text" id="phoneNumber" name="phoneNumber" required  value={formData.phoneNumber} onChange={handleChange}
             class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500" />
         </div>
 

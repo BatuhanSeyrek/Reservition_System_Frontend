@@ -8,6 +8,7 @@ function OwnerUpdate() {
     adminName: '',
     password: '',
     storeName: '',
+    phoneNumber: ''
   });
 
   useEffect(() => {
@@ -19,6 +20,7 @@ function OwnerUpdate() {
           adminName: data.adminName || '',
           password: '', // güvenlik nedeniyle şifreyi boş bırakıyoruz
           storeName: data.storeName || '',
+          phoneNumber: data.phoneNumber || ''
         });
       } catch (error) {
         console.error('Admin verisi çekilemedi:', error);
@@ -44,6 +46,7 @@ function OwnerUpdate() {
         adminName: data.adminName || '',
         password: '',
         storeName: data.storeName || '',
+        phoneNumber: data.phoneNumber || ''
       });
     } catch (error) {
       console.error('Güncelleme sırasında hata:', error);
@@ -80,6 +83,7 @@ function OwnerUpdate() {
               name="password"
               value={admin.password}
               onChange={handleChange}
+              placeholder="Şifre sizin güvenliğiniz için görünmüyor" 
               required
               className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
@@ -92,6 +96,19 @@ function OwnerUpdate() {
               id="storeName"
               name="storeName"
               value={admin.storeName}
+              onChange={handleChange}
+              required
+              className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="phoneNumber" className="block text-sm font-semibold text-gray-700">Phone Number</label>
+            <input
+              type="text"
+              id="phoneNumber"
+              name="phoneNumber"
+              value={admin.phoneNumber}
               onChange={handleChange}
               required
               className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
