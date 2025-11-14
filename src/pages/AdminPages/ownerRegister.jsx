@@ -71,13 +71,6 @@ function OwnerRegister() {
           Register as Admin
         </button>
       </form>
-
-      <p class="text-center text-sm text-gray-600">
-        Already have an admin account?
-        <Link to="/ownerLogin" class="text-blue-600 hover:underline">
-        Login here
-        </Link>
-      </p>
     </div>
 
   </div>

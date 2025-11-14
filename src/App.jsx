@@ -25,7 +25,7 @@ import ChairToEmployee from './pages/AdminPages/chairToEmployee';
 import OwnerDelete from './pages/AdminPages/ownerDelete';
 import OwnerAbout from './pages/AdminPages/ownerAbout';
 import UpdateDeleteReservation from './pages/UserPages/updateDeleteReservation';
-
+import SupervisorDashboard from './pages/SupervisorPages/SupervisorDashboard';
 function PreventBackNavigation() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -78,6 +78,7 @@ function App() {
         <Route path='/chairToEmployee' element={<ChairToEmployee/>}/>
         <Route path='/ownerDelete' element={<OwnerDelete/>}/>
         <Route path='/reservationUpdateDelete' element={<UpdateDeleteReservation/>} />
+        <Route path="/supervisorDashboard" element={<SupervisorDashboard/>} />
       </Routes>
     </Router>
   );

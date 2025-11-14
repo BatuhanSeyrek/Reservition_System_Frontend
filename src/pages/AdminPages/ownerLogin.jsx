@@ -66,12 +66,6 @@ const [username, setusername] = useState('');
       </button>
     </form>
 
-    <p class="mt-6 text-center text-sm text-gray-600">
-      Don’t have an admin account?
-      <Link to="/ownerRegister" class="text-blue-600 hover:underline">
-        Register here
-      </Link>
-    </p>
   </div>
 
 </div>
