@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import UserLayout from "./UserLayout";
 import { getData, postData } from "../../apiService";
+import { Scissors, Calendar, Clock } from "lucide-react";
 
 export default function ChairAvailabilityPage() {
   const { adminId } = useParams();
@@ -9,7 +10,6 @@ export default function ChairAvailabilityPage() {
   const [availableDates, setAvailableDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
 
-  // Fetch data
   useEffect(() => {
     fetchReservations();
   }, [adminId]);
@@ -46,7 +46,6 @@ export default function ChairAvailabilityPage() {
       await postData("/store/create", payload);
       alert("Reservation created successfully!");
 
-      // Update the list directly from state
       setReservation((prev) =>
         prev.map((res) =>
           res.chairId === chairId
@@ -56,7 +55,7 @@ export default function ChairAvailabilityPage() {
                   ...res.slots,
                   [selectedDate]: {
                     ...res.slots[selectedDate],
-                    [time]: false, // Mark as unavailable
+                    [time]: false,
                   },
                 },
               }
@@ -72,7 +71,9 @@ export default function ChairAvailabilityPage() {
   if (!reservation.length) {
     return (
       <UserLayout>
-        <div className="p-6">No records found.</div>
+        <div className="p-6 text-center text-gray-500 text-lg">
+          No records found.
+        </div>
       </UserLayout>
     );
   }
@@ -80,17 +81,16 @@ export default function ChairAvailabilityPage() {
   return (
     <UserLayout>
       <div className="p-6">
-        {/* Title on the left - Date selector on the right */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold">Chair Availability</h2>
+        {/* Başlık ve Tarih Seçici */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8 border-b pb-4 gap-4 md:gap-0">
+          <h2 className="text-2xl font-bold flex items-center gap-2 text-red-600">
+            <Scissors className="w-6 h-6" /> Chair Availability
+          </h2>
 
-          <div className="flex items-center gap-2">
-            <label htmlFor="dateSelect" className="font-medium">
-              Select Date:
-            </label>
+          <div className="flex items-center gap-2 bg-white p-2 rounded-xl shadow border">
+            <Calendar className="w-5 h-5 text-gray-500" />
             <select
-              id="dateSelect"
-              className="border p-2 rounded"
+              className="border p-2 rounded-lg hover:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-300 transition"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
             >
@@ -103,35 +103,47 @@ export default function ChairAvailabilityPage() {
           </div>
         </div>
 
-        {/* Chairs displayed in a grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {/* Koltuklar Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {reservation.map((res) => (
             <div
               key={res.chairId}
-              className="border rounded p-4 bg-gray-50 shadow"
+              className="rounded-2xl overflow-hidden shadow-lg bg-white border hover:shadow-2xl transition duration-200"
             >
-              <h3 className="text-lg font-medium mb-4 text-center">
-                {res.chairName}
-              </h3>
+              <div className="relative h-36 bg-red-100 flex items-center justify-center">
+                <img
+                  src="https://static.thenounproject.com/png/7786343-512.png"
+                  alt="barber-chair-icon"
+                  className="h-28 object-contain drop-shadow-lg"
+                />
+              </div>
 
-              <div className="flex flex-col gap-2">
-                {Object.entries(res.slots[selectedDate] || {}).map(
-                  ([time, available]) => (
-                    <div
-                      key={time}
-                      className={`p-2 border rounded text-center cursor-pointer transition ${
-                        available
-                          ? "bg-green-200 hover:bg-green-300"
-                          : "bg-red-200 cursor-not-allowed"
-                      }`}
-                      onClick={() =>
-                        available && handleReservationClick(res.chairId, time)
-                      }
-                    >
-                      {time} — {available ? "✅" : "❌"}
-                    </div>
-                  )
-                )}
+              <div className="p-4">
+                <h3 className="text-xl font-semibold text-center mb-3 text-gray-800">
+                  {res.chairName}
+                </h3>
+
+                <div className="flex flex-col gap-2">
+                  {Object.entries(res.slots[selectedDate] || {}).map(
+                    ([time, available]) => (
+                      <div
+                        key={time}
+                        className={`p-3 rounded-lg text-center font-medium border flex items-center justify-center gap-2 cursor-pointer transition duration-200
+                          ${
+                            available
+                              ? "bg-green-200 hover:bg-green-300"
+                              : "bg-red-200 cursor-not-allowed opacity-70"
+                          }`}
+                        onClick={() =>
+                          available && handleReservationClick(res.chairId, time)
+                        }
+                      >
+                        <Clock className="w-4 h-4" /> {time} —{" "}
+                        {available ? "Müsait ✅" : "Meşgul ❌"}
+                      </div>
+                    )
+                  )}
+                </div>
               </div>
             </div>
           ))}

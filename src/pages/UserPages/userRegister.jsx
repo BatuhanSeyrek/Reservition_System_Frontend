@@ -1,10 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import axios from 'axios';
 import { postData } from '../../apiService';
-function userRegister() {
-    const [formData, setFormData] = useState({
+
+function UserRegister() {
+  const [formData, setFormData] = useState({
     userName: '',
     email: '',
     phoneNumber: '',
@@ -20,7 +19,6 @@ function userRegister() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       await postData("/user/register", formData);
       alert("Kayıt başarılı!");
@@ -29,76 +27,81 @@ function userRegister() {
       alert("Hata: " + err.response?.data || err.message);
     }
   };
+
   return (
-    
-    <div class="bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 min-h-screen flex items-center justify-center p-4">
+    <div className="relative min-h-screen flex items-center justify-center">
 
-    <div class="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 space-y-6">
-      <div class="text-center">
-        <h2 class="text-3xl font-bold text-gray-800">Welcome Back</h2>
+      {/* Arka plan ve blur */}
+      <div
+        className="absolute inset-0 bg-cover bg-center filter blur-sm"
+        style={{ backgroundImage: "url('https://png.pngtree.com/background/20230616/original/pngtree-barbershop-with-several-old-and-antique-chairs-picture-image_3629466.jpg')" }} // buraya kendi berber resmini ekle
+      ></div>
 
+      {/* Blur üzerine koyu overlay */}
+      <div className="absolute inset-0 bg-black bg-opacity-30"></div>
+
+      {/* Form container */}
+      <div className="relative z-10 w-full max-w-md p-8 bg-white bg-opacity-90 rounded-2xl shadow-lg space-y-6">
+
+        <h2 className="text-3xl font-bold text-gray-800 text-center mb-4">Berber Kaydı</h2>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+
+          <div>
+            <label htmlFor="userName" className="block text-sm font-semibold text-gray-700">İsim</label>
+            <input type="text" id="userName" name="userName" required 
+              onChange={handleChange} value={formData.userName}
+              className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400" />
+          </div>
+
+          <div>
+            <label htmlFor="email" className="block text-sm font-semibold text-gray-700">Email</label>
+            <input type="email" id="email" name="email" required 
+              onChange={handleChange} value={formData.email}
+              className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400" />
+          </div>
+
+          <div>
+            <label htmlFor="phoneNumber" className="block text-sm font-semibold text-gray-700">Telefon</label>
+            <input type="text" id="phoneNumber" name="phoneNumber" required 
+              onChange={handleChange} value={formData.phoneNumber}
+              className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400" />
+          </div>
+
+          <div>
+            <label htmlFor="notificationType" className="block text-sm font-semibold text-gray-700">Bildirim Türü</label>
+            <select id="notificationType" name="notificationType" required 
+              onChange={handleChange} value={formData.notificationType}
+              className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400">
+              <option value="">Seçiniz...</option>
+              <option value="MAIL">Email</option>
+              <option value="SMS">SMS</option>
+              <option value="PUSH">Push</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-sm font-semibold text-gray-700">Şifre</label>
+            <input type="password" id="password" name="password" required 
+              onChange={handleChange} value={formData.password}
+              className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400" />
+          </div>
+
+          <button type="submit" 
+            className="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition duration-200 font-semibold">
+            Kayıt Ol
+          </button>
+        </form>
+
+        <p className="text-center text-sm text-gray-600">
+          Zaten hesabınız var mı?{" "}
+          <Link to="/" className="text-red-600 hover:underline">
+            Giriş Yap
+          </Link>
+        </p>
       </div>
-
-      <form onSubmit={handleSubmit} class="space-y-4">
-        <div>
-          <label for="userName" class="block text-sm font-semibold text-gray-700">Name</label>
-          <input type="text" id="userName" name="userName" required onChange={handleChange} value={formData.userName}
-            class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" />
-        </div>
-
-        <div>
-          <label for="email" class="block text-sm font-semibold text-gray-700">Email</label>
-          <input type="email" id="email" name="email" required onChange={handleChange} value={formData.email}
-            class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" />
-        </div>
-
-        <div>
-          <label for="phoneNumber" class="block text-sm font-semibold text-gray-700">Phone</label>
-          <input type="text" id="phoneNumber" name="phoneNumber" required onChange={handleChange} value={formData.phoneNumber}
-            class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" />
-        </div>
-
-        <div>
-          <label for="notificationType" class="block text-sm font-semibold text-gray-700">Notification Type</label>
-          <select id="notificationType" name="notificationType" required onChange={handleChange} value={formData.notificationType}
-            class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
-            <option value="">Select...</option>
-            <option value="MAIL">Email</option>
-            <option value="SMS">SMS</option>
-            <option value="PUSH">Push</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="password" class="block text-sm font-semibold text-gray-700">Password</label>
-          <input type="password" id="password" name="password" required onChange={handleChange} value={formData.password}
-            class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" />
-        </div>
-
-        <div class="flex items-center justify-between text-sm text-gray-600">
-          <label class="flex items-center">
-            <input type="checkbox" class="form-checkbox text-blue-600" />
-            <span class="ml-2">Remember me</span>
-          </label>
-          <a href="#" class="text-blue-500 hover:underline">Forgot password?</a>
-        </div>
-
-        <button type="submit"
-          class="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition duration-200">
-          Login
-        </button>
-      </form>
-
-      <p class="text-center text-sm text-gray-600">
-              Already have an user account?
-              <Link to="/" class="text-blue-600 hover:underline">
-              Login here
-              </Link>
-            </p>
     </div>
-
-  </div>
-  )
+  );
 }
 
-export default userRegister
+export default UserRegister;

@@ -14,7 +14,7 @@ axiosInstance.interceptors.request.use(
       config.url.includes("/admin/register") ||
       config.url.includes("/user/login") ||
       config.url.includes("/user/register") ||
-      config.url.includes("/supervisorDashboard")
+      config.url.includes("/supervisorDashboard") 
       
     ) {
       return config;
