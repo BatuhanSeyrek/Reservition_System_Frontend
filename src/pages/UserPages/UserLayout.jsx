@@ -12,11 +12,11 @@ export default function UserLayout({ children }) {
   return (
     <div className="relative min-h-screen bg-gray-100">
       {/* Header: Hamburger + Navbar */}
-      <header className="fixed top-0 left-0 right-0 h-16 bg-gray-300 shadow-md z-50 flex items-center px-6">
+      <header className="fixed top-0 left-0 right-0 h-16 bg-gray-800 shadow-md z-50 flex items-center px-6">
         {/* Hamburger buton - HER EKRANDA görünür */}
         <button
           onClick={toggleSidebar}
-          className="p-2 rounded bg-gray-200 hover:bg-gray-300 mr-4"
+          className="p-2 rounded bg-gray-200 hover:bg-gray-200 mr-4"
           aria-label="Toggle sidebar"
         >
           <FontAwesomeIcon icon={faBars} className="w-6 h-6 text-black" />
