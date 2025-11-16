@@ -77,6 +77,19 @@ function OwnerSidebar({ isOpen }) {
               <span className="text-sm font-medium">Admin Information</span>
             </Link>
           </li>
+           <li>
+            <Link
+              to="/adminReservations"
+              className={`flex items-center gap-3 px-4 py-2 rounded-md transition duration-200 ${
+                pathname === '/adminReservations'
+                  ? 'bg-red-600 text-white shadow-md'
+                  : 'text-gray-200 hover:bg-red-700 hover:text-white'
+              }`}
+            >
+              <FontAwesomeIcon icon={faCircleQuestion} className="w-5 h-5" />
+              <span className="text-sm font-medium">Admin Reservation İnfo</span>
+            </Link>
+          </li>
         </ul>
       </aside>
     </>
