@@ -2,7 +2,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHandPointer } from '@fortawesome/free-regular-svg-icons';
 import React, { useState } from 'react';
-import { postData } from '../../apiService';
+import { postData, getData } from '../../apiService';
 
 function OwnerLogin() {
   const [username, setUsername] = useState('');
@@ -12,9 +12,21 @@ function OwnerLogin() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+      // 1️⃣ Admin login
       const response = await postData("/admin/login", { username, password });
       localStorage.setItem("token", response.token);
-      navigate("/ownerAbout");
+
+      // 2️⃣ myAdmin verisini çek
+      const myAdmin = await getData("/admin/myAdmin");
+
+      // 3️⃣ referenceId kontrolü
+      if (!myAdmin.referenceId) {
+        // Eğer boşsa reference update sayfasına yönlendir
+        navigate("/ownerUpdate");
+      } else {
+        // Doluysa normal ana sayfaya yönlendir
+        navigate("/ownerAbout");
+      }
     } catch (err) {
       alert("Giriş başarısız. Lütfen bilgilerinizi kontrol edin.");
       console.error(err);
@@ -27,7 +39,7 @@ function OwnerLogin() {
       {/* Arka plan ve blur */}
       <div
         className="absolute inset-0 bg-cover bg-center filter blur-sm"
-        style={{ backgroundImage: "url('https://png.pngtree.com/background/20230616/original/pngtree-barbershop-with-several-old-and-antique-chairs-picture-image_3629466.jpg')" }} // buraya kendi berber resmini ekle
+        style={{ backgroundImage: "url('https://png.pngtree.com/background/20230616/original/pngtree-barbershop-with-several-old-and-antique-chairs-picture-image_3629466.jpg')" }}
       ></div>
 
       {/* Blur üzerine koyu overlay */}

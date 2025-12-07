@@ -20,7 +20,7 @@ const AdminList = () => {
 
       let data = res.data || res;
       if (!Array.isArray(data)) data = [data];
-    data.sort((a, b) => a.id - b.id); // ID'ye göre artan sırala
+      data.sort((a, b) => a.id - b.id); // ID'ye göre artan sırala
       setAdmins(data);
     } catch (err) {
       console.error("Admin listesi çekilirken hata:", err);
