@@ -15,6 +15,7 @@ axiosInstance.interceptors.request.use(
       config.url.includes("/user/login") ||
       config.url.includes("/user/register") ||
       config.url.includes("/supervisorDashboard") ||
+      config.url.includes("/store/referenceReservationAdd") ||
       config.url.includes("/user/refenceIdLogin")
       
     ) {

@@ -3,45 +3,48 @@ import UserLayout from "./UserLayout";
 import { postData } from "../../apiService";
 import { Scissors, Calendar, Clock } from "lucide-react";
 
-export default function ChairAvailabilityPage() {
-  
+export default function ChairAvailabilityPageReference() {
   const [reservation, setReservation] = useState([]);
   const [availableDates, setAvailableDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
 
-  // 🔥 LocalStorage'dan alınması en yukarıda olmalı
+  // 🔥 Misafir müşteri bilgileri
+  const [customerName, setCustomerName] = useState("");
+  const [customerSurname, setCustomerSurname] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+
+  // 🔥 LocalStorage
   const referenceId = localStorage.getItem("referenceId");
   const adminId = localStorage.getItem("adminId");
 
-  // 🔥 Payload burada oluşturulmalı (DEĞERLER OKUNDUKTAN SONRA)
-  const payload = { referenceId };
-
   useEffect(() => {
-    if (referenceId) {
-      fetchReservations();
-    } else {
-      console.error("referenceId not found!");
-    }
+    if (referenceId) fetchReservations();
+    else console.error("referenceId not found!");
   }, [referenceId]);
 
   const fetchReservations = async () => {
     try {
-      const data = await postData(`/store/getAvailableSlotsReference`, payload);
+      const data = await postData("/store/getAvailableSlotsReference", { referenceId });
       setReservation(data);
 
       const allDates = Object.keys(data[0]?.slots || {});
       const firstSevenDays = allDates.slice(0, 7);
-
       setAvailableDates(firstSevenDays);
-      setSelectedDate((prev) => prev || firstSevenDays[0] || "");
+      setSelectedDate(firstSevenDays[0] || "");
     } catch (err) {
       console.error("Error fetching data:", err);
     }
   };
 
   const handleReservationClick = async (chairId, time) => {
+    // 🔥 Misafir bilgileri validation
+    if (!customerName || !customerSurname || !customerPhone) {
+      alert("Lütfen müşteri adı, soyadı ve telefon bilgilerini doldurun!");
+      return;
+    }
+
     const confirmCreate = window.confirm(
-      `Are you sure you want to create a reservation for ${selectedDate} at ${time}?`
+      `Create reservation for ${customerName} ${customerSurname} at ${selectedDate} / ${time}?`
     );
     if (!confirmCreate) return;
 
@@ -51,11 +54,15 @@ export default function ChairAvailabilityPage() {
         chairId: Number(chairId),
         reservationDate: selectedDate,
         startTime: time,
+        customerName,
+        customerSurname,
+        customerPhone,
       };
 
-      await postData("/store/create", payload);
+      await postData("/store/referenceReservationAdd", payload); // 🔥 Ayrı endpoint
       alert("Reservation created successfully!");
 
+      // Slot durumunu güncelle
       setReservation((prev) =>
         prev.map((res) =>
           res.chairId === chairId
@@ -82,7 +89,7 @@ export default function ChairAvailabilityPage() {
     return (
       <UserLayout>
         <div className="p-6 text-center text-gray-500 text-lg">
-          No records found.
+          No available chairs found.
         </div>
       </UserLayout>
     );
@@ -91,23 +98,49 @@ export default function ChairAvailabilityPage() {
   return (
     <UserLayout>
       <div className="p-6">
-        
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8 border-b pb-4 gap-4 md:gap-0">
+
+        {/* 🔥 Misafir müşteri formu */}
+        <div className="bg-white shadow p-4 rounded-xl mb-8">
+          <h3 className="text-lg font-bold mb-4">Customer Information</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <input
+              type="text"
+              className="border p-2 rounded-lg"
+              placeholder="Customer Name"
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value)}
+            />
+            <input
+              type="text"
+              className="border p-2 rounded-lg"
+              placeholder="Customer Surname"
+              value={customerSurname}
+              onChange={(e) => setCustomerSurname(e.target.value)}
+            />
+            <input
+              type="tel"
+              className="border p-2 rounded-lg"
+              placeholder="Phone Number"
+              value={customerPhone}
+              onChange={(e) => setCustomerPhone(e.target.value)}
+            />
+          </div>
+        </div>
+
+        {/* Başlık ve Tarih Seçici */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8 border-b pb-4">
           <h2 className="text-2xl font-bold flex items-center gap-2 text-red-600">
             <Scissors className="w-6 h-6" /> Chair Availability
           </h2>
-
           <div className="flex items-center gap-2 bg-white p-2 rounded-xl shadow border">
             <Calendar className="w-5 h-5 text-gray-500" />
             <select
-              className="border p-2 rounded-lg hover:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-300 transition"
+              className="border p-2 rounded-lg"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
             >
               {availableDates.map((date) => (
-                <option key={date} value={date}>
-                  {date}
-                </option>
+                <option key={date} value={date}>{date}</option>
               ))}
             </select>
           </div>
@@ -116,40 +149,28 @@ export default function ChairAvailabilityPage() {
         {/* Koltuk Listesi */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {reservation.map((res) => (
-            <div
-              key={res.chairId}
-              className="rounded-2xl overflow-hidden shadow-lg bg-white border hover:shadow-2xl transition duration-200"
-            >
+            <div key={res.chairId} className="rounded-2xl overflow-hidden shadow-lg bg-white border">
               <div className="relative h-36 bg-red-100 flex items-center justify-center">
                 <img
                   src="https://static.thenounproject.com/png/7786343-512.png"
-                  alt="barber-chair-icon"
-                  className="h-28 object-contain drop-shadow-lg"
+                  className="h-28"
+                  alt={res.chairName}
                 />
               </div>
 
               <div className="p-4">
-                <h3 className="text-xl font-semibold text-center mb-3 text-gray-800">
-                  {res.chairName}
-                </h3>
-
+                <h3 className="text-xl font-semibold text-center mb-3">{res.chairName}</h3>
                 <div className="flex flex-col gap-2">
                   {Object.entries(res.slots[selectedDate] || {}).map(
                     ([time, available]) => (
                       <div
                         key={time}
-                        className={`p-3 rounded-lg text-center font-medium border flex items-center justify-center gap-2 cursor-pointer transition duration-200
-                          ${
-                            available
-                              ? "bg-green-200 hover:bg-green-300"
-                              : "bg-red-200 cursor-not-allowed opacity-70"
-                          }`}
-                        onClick={() =>
-                          available && handleReservationClick(res.chairId, time)
-                        }
+                        className={`p-3 rounded-lg text-center font-medium border cursor-pointer ${
+                          available ? "bg-green-200" : "bg-red-200 cursor-not-allowed"
+                        }`}
+                        onClick={() => available && handleReservationClick(res.chairId, time)}
                       >
-                        <Clock className="w-4 h-4" /> {time} —{" "}
-                        {available ? "Müsait ✅" : "Meşgul ❌"}
+                        <Clock className="w-4 h-4 inline" /> {time} – {available ? "Müsait" : "Meşgul"}
                       </div>
                     )
                   )}
@@ -158,6 +179,7 @@ export default function ChairAvailabilityPage() {
             </div>
           ))}
         </div>
+
       </div>
     </UserLayout>
   );
