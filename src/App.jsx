@@ -31,7 +31,8 @@ import OwnerAbout from './pages/AdminPages/ownerAbout';
 import UpdateDeleteReservation from './pages/UserPages/updateDeleteReservation';
 import SupervisorDashboard from './pages/SupervisorPages/SupervisorDashboard';
 import AdminReservations from './pages/AdminPages/AdminReservations';
-
+import ReferenceIdLogin from './pages/UserPages/referenceIdLogin';
+import ReferenceReservation from './pages/UserPages/referencereservation';
 function PreventBackNavigation() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -62,7 +63,7 @@ function App() {
       <Router>
         <PreventBackNavigation />
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/userLogin" element={<HomePage />} />
           <Route path="/ownerLogin" element={<OwnerLogin />} />
           <Route path="/ownerRegister" element={<OwnerRegister />} />
           <Route path="/userRegister" element={<UserRegister />} />
@@ -89,6 +90,8 @@ function App() {
           <Route path='/reservationUpdateDelete' element={<UpdateDeleteReservation/>} />
           <Route path="/supervisorDashboard" element={<SupervisorDashboard/>} />
           <Route path="/adminReservations" element={<AdminReservations/>} />
+        <Route path="/" element={<ReferenceIdLogin />} />
+        <Route path="/referencereservation" element={< ReferenceReservation/>} />
         </Routes>
       </Router>
     </SocketProvider>
