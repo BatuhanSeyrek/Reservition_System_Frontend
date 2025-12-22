@@ -18,6 +18,8 @@ function ReferenceIdLogin() {
         localStorage.setItem("referenceId", response.referenceId);
         localStorage.setItem("adminName", response.adminName);
         localStorage.setItem("adminId", response.id);
+        localStorage.setItem("storeName", response.storeName);
+
 
         navigate("/referencereservation");
       } else {

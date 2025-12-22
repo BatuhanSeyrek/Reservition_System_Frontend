@@ -8,18 +8,21 @@ export default function ChairAvailabilityPageReference() {
   const [availableDates, setAvailableDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
 
-  // 🔥 Misafir müşteri bilgileri
+  // Modal içinde form state
+  const [modalOpen, setModalOpen] = useState(false);
+  const [currentChair, setCurrentChair] = useState(null);
+  const [currentTime, setCurrentTime] = useState("");
+
   const [customerName, setCustomerName] = useState("");
   const [customerSurname, setCustomerSurname] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
 
-  // 🔥 LocalStorage
   const referenceId = localStorage.getItem("referenceId");
   const adminId = localStorage.getItem("adminId");
 
   useEffect(() => {
     if (referenceId) fetchReservations();
-    else console.error("referenceId not found!");
+    else console.error("referenceId bulunamadı!");
   }, [referenceId]);
 
   const fetchReservations = async () => {
@@ -32,56 +35,60 @@ export default function ChairAvailabilityPageReference() {
       setAvailableDates(firstSevenDays);
       setSelectedDate(firstSevenDays[0] || "");
     } catch (err) {
-      console.error("Error fetching data:", err);
+      console.error("Veri çekilirken hata oluştu:", err);
     }
   };
 
-  const handleReservationClick = async (chairId, time) => {
-    // 🔥 Misafir bilgileri validation
+  const handleOpenModal = (chairId, time) => {
+    setCurrentChair(chairId);
+    setCurrentTime(time);
+    setModalOpen(true);
+  };
+
+  const handleConfirmReservation = async () => {
     if (!customerName || !customerSurname || !customerPhone) {
       alert("Lütfen müşteri adı, soyadı ve telefon bilgilerini doldurun!");
       return;
     }
 
-    const confirmCreate = window.confirm(
-      `Create reservation for ${customerName} ${customerSurname} at ${selectedDate} / ${time}?`
-    );
-    if (!confirmCreate) return;
-
     try {
       const payload = {
         storeId: Number(adminId),
-        chairId: Number(chairId),
+        chairId: Number(currentChair),
         reservationDate: selectedDate,
-        startTime: time,
+        startTime: currentTime,
         customerName,
         customerSurname,
         customerPhone,
       };
 
-      await postData("/store/referenceReservationAdd", payload); // 🔥 Ayrı endpoint
-      alert("Reservation created successfully!");
+      await postData("/store/referenceReservationAdd", payload);
+      alert("Rezervasyon başarıyla oluşturuldu!");
 
-      // Slot durumunu güncelle
       setReservation((prev) =>
         prev.map((res) =>
-          res.chairId === chairId
+          res.chairId === currentChair
             ? {
                 ...res,
                 slots: {
                   ...res.slots,
                   [selectedDate]: {
                     ...res.slots[selectedDate],
-                    [time]: false,
+                    [currentTime]: false,
                   },
                 },
               }
             : res
         )
       );
+
+      setModalOpen(false);
+      setCustomerName("");
+      setCustomerSurname("");
+      setCustomerPhone("");
     } catch (err) {
-      console.error("Reservation error:", err);
-      alert("An error occurred while creating the reservation!");
+      console.error("Rezervasyon hatası:", err);
+      alert("Rezervasyon oluşturulurken bir hata oluştu!");
     }
   };
 
@@ -89,7 +96,7 @@ export default function ChairAvailabilityPageReference() {
     return (
       <UserLayout>
         <div className="p-6 text-center text-gray-500 text-lg">
-          No available chairs found.
+          Müsait koltuk bulunamadı.
         </div>
       </UserLayout>
     );
@@ -98,39 +105,10 @@ export default function ChairAvailabilityPageReference() {
   return (
     <UserLayout>
       <div className="p-6">
-
-        {/* 🔥 Misafir müşteri formu */}
-        <div className="bg-white shadow p-4 rounded-xl mb-8">
-          <h3 className="text-lg font-bold mb-4">Customer Information</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <input
-              type="text"
-              className="border p-2 rounded-lg"
-              placeholder="Customer Name"
-              value={customerName}
-              onChange={(e) => setCustomerName(e.target.value)}
-            />
-            <input
-              type="text"
-              className="border p-2 rounded-lg"
-              placeholder="Customer Surname"
-              value={customerSurname}
-              onChange={(e) => setCustomerSurname(e.target.value)}
-            />
-            <input
-              type="tel"
-              className="border p-2 rounded-lg"
-              placeholder="Phone Number"
-              value={customerPhone}
-              onChange={(e) => setCustomerPhone(e.target.value)}
-            />
-          </div>
-        </div>
-
-        {/* Başlık ve Tarih Seçici */}
+        {/* Başlık & Tarih Seçici */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 border-b pb-4">
           <h2 className="text-2xl font-bold flex items-center gap-2 text-red-600">
-            <Scissors className="w-6 h-6" /> Chair Availability
+            <Scissors className="w-6 h-6" /> Koltuk Durumu
           </h2>
           <div className="flex items-center gap-2 bg-white p-2 rounded-xl shadow border">
             <Calendar className="w-5 h-5 text-gray-500" />
@@ -168,9 +146,9 @@ export default function ChairAvailabilityPageReference() {
                         className={`p-3 rounded-lg text-center font-medium border cursor-pointer ${
                           available ? "bg-green-200" : "bg-red-200 cursor-not-allowed"
                         }`}
-                        onClick={() => available && handleReservationClick(res.chairId, time)}
+                        onClick={() => available && handleOpenModal(res.chairId, time)}
                       >
-                        <Clock className="w-4 h-4 inline" /> {time} – {available ? "Müsait" : "Meşgul"}
+                        <Clock className="w-4 h-4 inline" /> {time} – {available ? "Müsait" : "Dolu"}
                       </div>
                     )
                   )}
@@ -179,8 +157,60 @@ export default function ChairAvailabilityPageReference() {
             </div>
           ))}
         </div>
-
       </div>
+
+      {/* Modal */}
+      {modalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-xl shadow-lg w-96">
+            <h3 className="text-lg font-bold mb-4">Müşteri Bilgileri ve Onay</h3>
+            
+            {/* Modal içi form */}
+            <div className="grid grid-cols-1 gap-4 mb-4">
+              <input
+                type="text"
+                className="border p-4 rounded-lg h-12 text-base w-full"
+                placeholder="Müşteri Adı"
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+              />
+              <input
+                type="text"
+                className="border p-4 rounded-lg h-12 text-base w-full"
+                placeholder="Müşteri Soyadı"
+                value={customerSurname}
+                onChange={(e) => setCustomerSurname(e.target.value)}
+              />
+              <input
+                type="tel"
+                className="border p-4 rounded-lg h-12 text-base w-full"
+                placeholder="Telefon Numarası"
+                value={customerPhone}
+                onChange={(e) => setCustomerPhone(e.target.value)}
+              />
+            </div>
+
+            <p className="mb-4">
+              {customerName} {customerSurname} için {selectedDate} / {currentTime} saatinde rezervasyon oluşturulsun mu?
+            </p>
+
+            <div className="flex justify-end gap-4">
+              <button
+                className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
+                onClick={() => setModalOpen(false)}
+              >
+                İptal
+              </button>
+              <button
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                onClick={handleConfirmReservation}
+              >
+                Onayla
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </UserLayout>
   );
 }
