@@ -97,14 +97,14 @@ export default function Navbar({ referenceId }) {
               }}
               className="w-full px-4 py-2 text-left hover:bg-red-600 hover:text-white"
             >
-              About
+              Hakkımızda
             </button>
 
             <button
               onClick={handleLogout}
               className="w-full px-4 py-2 text-left text-red-300 hover:bg-red-600 hover:text-white border-t border-gray-600"
             >
-              Exit
+              Çıkış Yap
             </button>
           </div>
         )}

@@ -35,7 +35,6 @@ function OwnerUpdate() {
 
         setBackendLoadedReferenceId(data.referenceId || "");
 
-        // Eğer referenceId boşsa modal aç
         if (!data.referenceId) setShowModal(true);
 
       } catch (error) {
@@ -81,34 +80,36 @@ function OwnerUpdate() {
 
   return (
     <AdminLayout>
+
       {/* Modal */}
       <Modal
         isOpen={showModal}
         onRequestClose={() => setShowModal(false)}
-        contentLabel="Reference ID Uyarısı"
+        contentLabel="Referans ID Uyarısı"
         className="max-w-md mx-auto mt-20 bg-white p-6 rounded shadow-lg outline-none"
         overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
       >
-        <h2 className="text-2xl font-bold mb-4">Hoşgeldiniz!</h2>
+        <h2 className="text-2xl font-bold mb-4">Hoş Geldiniz!</h2>
         <p className="mb-4">
-          Sistemimize ilk girişinizde Reference ID'niz bulunmamaktadır. 
-          Bu ID sayesinde müşterileriniz sizi bulacak. Lütfen bir kere mahsus Reference ID giriniz 
-          ve işleminizi tamamladıktan sonra formun altındaki mavi butona tıklayınız.
+          Sistemimize ilk girişinizde bir Referans ID’niz bulunmamaktadır.
+          Bu ID sayesinde müşterileriniz sizi bulacaktır.
+          Lütfen bir defaya mahsus Referans ID’nizi giriniz ve ardından formun altındaki butona tıklayınız.
         </p>
         <button 
           onClick={() => setShowModal(false)}
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
-          Tamam
+          Anladım
         </button>
       </Modal>
 
       <div className="w-full max-w-md mx-auto bg-white p-6 rounded shadow mt-4">
-        <h2 className="text-3xl font-bold text-center">Admin Revision</h2>
+        <h2 className="text-3xl font-bold text-center">Yönetici Bilgileri</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+
           <div>
-            <label>Admin Name</label>
+            <label>Yönetici Adı</label>
             <input
               type="text"
               name="adminName"
@@ -119,7 +120,7 @@ function OwnerUpdate() {
           </div>
 
           <div>
-            <label>Password</label>
+            <label>Şifre</label>
             <input
               type="password"
               name="password"
@@ -131,7 +132,7 @@ function OwnerUpdate() {
           </div>
 
           <div>
-            <label>Store Name</label>
+            <label>Mağaza Adı</label>
             <input
               type="text"
               name="storeName"
@@ -142,7 +143,7 @@ function OwnerUpdate() {
           </div>
 
           <div>
-            <label>Phone Number</label>
+            <label>Telefon Numarası</label>
             <input
               type="text"
               name="phoneNumber"
@@ -153,7 +154,7 @@ function OwnerUpdate() {
           </div>
 
           <div>
-            <label>Reference ID</label>
+            <label>Referans ID</label>
             <input
               type="text"
               name="referenceId"
@@ -165,7 +166,7 @@ function OwnerUpdate() {
               }`}
               placeholder={
                 backendLoadedReferenceId === "" 
-                  ? "Referans ID girin (bir kere girilebilir)" 
+                  ? "Referans ID girin (sadece bir kez girilebilir)" 
                   : ""
               }
             />
@@ -175,8 +176,9 @@ function OwnerUpdate() {
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
           >
-            Update
+            Güncelle
           </button>
+
         </form>
       </div>
     </AdminLayout>

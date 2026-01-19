@@ -43,13 +43,13 @@ function HomePage() {
             to="/ownerLogin" 
             className="flex items-center justify-center text-red-600 hover:underline gap-2"
           >
-            Admin Girişi <FontAwesomeIcon icon={faHandPointer} />
+            Yönetici Girişi <FontAwesomeIcon icon={faHandPointer} />
           </Link>
         </div>
 
         {/* Login Form */}
         <h2 className="text-3xl font-bold mb-6 text-center text-gray-800 flex items-center justify-center gap-2">
-          <FontAwesomeIcon icon={faScissors} /> Berber Giriş
+          <FontAwesomeIcon icon={faScissors} /> Kullanıcı Girişi
         </h2>
 
         <form onSubmit={handleLogin} className="space-y-5">

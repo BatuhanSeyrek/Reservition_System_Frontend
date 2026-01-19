@@ -50,17 +50,17 @@ function OwnerLogin() {
 
         {/* User login link */}
         <div className="text-center mb-4">
-          <Link to="/" className="flex items-center justify-center text-red-600 hover:underline gap-2">
-            User Girişi <FontAwesomeIcon icon={faHandPointer} />
+          <Link to="/userLogin" className="flex items-center justify-center text-red-600 hover:underline gap-2">
+            Kullanıcı Girişi <FontAwesomeIcon icon={faHandPointer} />
           </Link>
         </div>
 
-        <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">Admin Panel Girişi</h2>
+        <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">Yönetici Panel Girişi</h2>
 
         <form onSubmit={handleLogin} className="space-y-4">
 
           <div>
-            <label htmlFor="username" className="block text-sm font-semibold text-gray-700">Admin Kullanıcı Adı</label>
+            <label htmlFor="username" className="block text-sm font-semibold text-gray-700">Yönetici Kullanıcı Adı</label>
             <input 
               type="text" 
               id="username" 

@@ -48,11 +48,10 @@ function ReservationDeleteUpdate() {
       const res = await getData(`/store/chairgetbystore/${storeId}`);
       const chairsData = res.data || res;
 
-      // Döngüsel referansı kırmak için employee içindeki chair alanını siliyoruz
       const cleanedChairs = chairsData.map(chair => {
         if (chair.employee) {
           const emp = { ...chair.employee };
-          delete emp.chair; // Sonsuz döngüyü kırıyoruz
+          delete emp.chair; 
           return { ...chair, employee: emp };
         }
         return chair;
@@ -60,7 +59,7 @@ function ReservationDeleteUpdate() {
 
       setChairList(cleanedChairs);
     } catch (err) {
-      console.error("Chair listesi çekilirken hata:", err);
+      console.error("Koltuk listesi çekilirken hata:", err);
       setChairList([]);
     }
   };
@@ -70,7 +69,6 @@ function ReservationDeleteUpdate() {
     fetchStores();
   }, [token]);
 
-  // Store seçimi değiştiğinde chair listesini güncelle
   useEffect(() => {
     if (selectedStoreId) {
       fetchChairs(Number(selectedStoreId));
@@ -80,7 +78,6 @@ function ReservationDeleteUpdate() {
     setSelectedChairId('');
   }, [selectedStoreId]);
 
-  // chairList güncellendiğinde ve edit modundaysak, seçili reservation'ın chairId'sini setle
   useEffect(() => {
     if (editMode && editReservationId && chairList.length > 0) {
       const currentReservation = reservationList.find(r => r.id === editReservationId);
@@ -107,7 +104,6 @@ function ReservationDeleteUpdate() {
     setSelectedStoreId(reservation.storeId?.toString() || '');
     setReservationDate(reservation.reservationDate || '');
     setStartTime(reservation.startTime || '');
-    // selectedChairId burada useEffect tarafından setleniyor
   };
 
   const handleSubmit = async (e) => {
@@ -160,7 +156,7 @@ function ReservationDeleteUpdate() {
       <div className="flex gap-6">
         {/* Sol: Rezervasyon Listesi */}
         <div className="max-w-md mx-auto mt-1 w-1/2">
-          <h2 className="text-xl font-semibold mb-4">Information Reservation</h2>
+          <h2 className="text-xl font-semibold mb-4">Rezervasyon Bilgilerim</h2>
           {reservationList.length === 0 && <p>Henüz rezervasyon bulunmamaktadır.</p>}
           {reservationList.map(reservation => (
             <div
@@ -168,25 +164,25 @@ function ReservationDeleteUpdate() {
               className="bg-white p-4 mb-4 border-2 rounded shadow flex"
             >
               <div className="w-3/4">
-                <p><strong>Store Name:</strong> {reservation.storeName}</p>
-                <p><strong>User Name:</strong> {reservation.userName}</p>
-                <p><strong>Chair Name:</strong> {reservation.chairName}</p>
-                <p><strong>Reservation Date:</strong> {reservation.reservationDate}</p>
-                <p><strong>Start Time:</strong> {reservation.startTime}</p>
-                <p><strong>End Time:</strong> {reservation.endTime}</p>
+                <p><strong>Mağaza Adı:</strong> {reservation.storeName}</p>
+                <p><strong>Müşteri Adı:</strong> {reservation.userName}</p>
+                <p><strong>Koltuk No/Adı:</strong> {reservation.chairName}</p>
+                <p><strong>Rezervasyon Tarihi:</strong> {reservation.reservationDate}</p>
+                <p><strong>Başlangıç Saati:</strong> {reservation.startTime}</p>
+                <p><strong>Bitiş Saati:</strong> {reservation.endTime}</p>
               </div>
               <div className="w-1/4 flex flex-col justify-center items-end gap-2 text-xl">
                 <button
                   onClick={() => handleEdit(reservation)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full"
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full text-base"
                 >
-                  Edit
+                  Düzenle
                 </button>
                 <button
                   onClick={() => handleDelete(reservation.id)}
-                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-full"
+                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-full text-base"
                 >
-                  Delete
+                  Sil
                 </button>
               </div>
             </div>
@@ -196,18 +192,18 @@ function ReservationDeleteUpdate() {
         {/* Sağ: Sadece edit modunda form göster */}
         {editMode && (
           <div className="w-1/2 bg-white p-6 rounded shadow">
-            <h2 className="text-xl font-semibold mb-4">Edit Reservation</h2>
+            <h2 className="text-xl font-semibold mb-4">Rezervasyonu Düzenle</h2>
             <form className="space-y-4" onSubmit={handleSubmit}>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700">Select Store</label>
+                <label className="block text-sm font-semibold text-gray-700">Mağaza Seçin</label>
                 <select
                   value={selectedStoreId}
                   onChange={handleStoreChange}
                   className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg"
                   required
                 >
-                  <option value="">-- Select Store --</option>
+                  <option value="">-- Mağaza Seçiniz --</option>
                   {storeList.map((store, index) => (
                     <option key={store.id ?? index} value={store.id}>
                       {store.storeName}
@@ -217,7 +213,7 @@ function ReservationDeleteUpdate() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700">Select Chair</label>
+                <label className="block text-sm font-semibold text-gray-700">Koltuk Seçin</label>
                 <select
                   value={selectedChairId}
                   onChange={(e) => setSelectedChairId(e.target.value)}
@@ -225,7 +221,7 @@ function ReservationDeleteUpdate() {
                   disabled={!selectedStoreId}
                   required
                 >
-                  <option value="">-- Select Chair --</option>
+                  <option value="">-- Koltuk Seçiniz --</option>
                   {Array.isArray(chairList) && chairList.length > 0 ? (
                     chairList.map((chair, index) => (
                       <option key={chair.id ?? index} value={chair.id}>
@@ -233,13 +229,13 @@ function ReservationDeleteUpdate() {
                       </option>
                     ))
                   ) : (
-                    <option disabled>Chair bulunamadı</option>
+                    <option disabled>Koltuk bulunamadı</option>
                   )}
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700">Reservation Date</label>
+                <label className="block text-sm font-semibold text-gray-700">Rezervasyon Tarihi</label>
                 <input
                   type="date"
                   value={reservationDate}
@@ -250,7 +246,7 @@ function ReservationDeleteUpdate() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700">Start Time</label>
+                <label className="block text-sm font-semibold text-gray-700">Başlangıç Saati</label>
                 <input
                   type="time"
                   value={startTime}
@@ -265,7 +261,7 @@ function ReservationDeleteUpdate() {
                   type="submit"
                   className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition"
                 >
-                  Update
+                  Güncelle
                 </button>
 
                 <button
@@ -280,7 +276,7 @@ function ReservationDeleteUpdate() {
                   }}
                   className="w-full bg-gray-400 text-white font-semibold py-2 rounded-lg hover:bg-gray-500 transition"
                 >
-                  Cancel
+                  İptal
                 </button>
               </div>
             </form>

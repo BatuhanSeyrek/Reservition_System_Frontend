@@ -52,7 +52,7 @@ const AdminDashboard = () => {
   const [endDate, setEndDate] = useState("");
   const [isTodayActive, setIsTodayActive] = useState(false);
 
-  const title = "Admin Dashboard";
+  const title = "Yönetici Rezervasyon Paneli";
   const [typedTitle, setTypedTitle] = useState("");
 
   /* ---------------- FETCH ---------------- */

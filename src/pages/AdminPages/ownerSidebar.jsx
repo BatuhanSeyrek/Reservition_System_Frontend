@@ -5,6 +5,7 @@ import {
   faChair,
   faWrench,
   faCircleQuestion,
+  faCalendarCheck
 } from '@fortawesome/free-solid-svg-icons';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -21,7 +22,7 @@ function OwnerSidebar({ isOpen }) {
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <h2 className="text-2xl font-semibold mb-8 text-red-500 text-center tracking-wide border-b border-red-700 pb-3">
-          Admin Panel
+          Yönetici Paneli
         </h2>
 
         <ul className="space-y-3">
@@ -35,9 +36,10 @@ function OwnerSidebar({ isOpen }) {
               }`}
             >
               <FontAwesomeIcon icon={faBuildingUser} className="w-5 h-5" />
-              <span className="text-sm font-medium">Employee Delete Update</span>
+              <span className="text-sm font-medium">Çalışan Yönetimi</span>
             </Link>
           </li>
+
           <li>
             <Link
               to="/chairDeleteUpdate"
@@ -48,9 +50,10 @@ function OwnerSidebar({ isOpen }) {
               }`}
             >
               <FontAwesomeIcon icon={faChair} className="w-5 h-5" />
-              <span className="text-sm font-medium">Chair Delete Update</span>
+              <span className="text-sm font-medium">Koltuk Yönetimi</span>
             </Link>
           </li>
+
           <li>
             <Link
               to="/ownerUpdate"
@@ -61,23 +64,13 @@ function OwnerSidebar({ isOpen }) {
               }`}
             >
               <FontAwesomeIcon icon={faWrench} className="w-5 h-5" />
-              <span className="text-sm font-medium">Admin Update</span>
+              <span className="text-sm font-medium">Yönetici Ayarları</span>
             </Link>
           </li>
+
+  
+
           <li>
-            <Link
-              to="/ownerInformation"
-              className={`flex items-center gap-3 px-4 py-2 rounded-md transition duration-200 ${
-                pathname === '/ownerInformation'
-                  ? 'bg-red-600 text-white shadow-md'
-                  : 'text-gray-200 hover:bg-red-700 hover:text-white'
-              }`}
-            >
-              <FontAwesomeIcon icon={faCircleQuestion} className="w-5 h-5" />
-              <span className="text-sm font-medium">Admin Information</span>
-            </Link>
-          </li>
-           <li>
             <Link
               to="/adminReservations"
               className={`flex items-center gap-3 px-4 py-2 rounded-md transition duration-200 ${
@@ -86,8 +79,8 @@ function OwnerSidebar({ isOpen }) {
                   : 'text-gray-200 hover:bg-red-700 hover:text-white'
               }`}
             >
-              <FontAwesomeIcon icon={faCircleQuestion} className="w-5 h-5" />
-              <span className="text-sm font-medium">Admin Reservation İnfo</span>
+              <FontAwesomeIcon icon={faCalendarCheck} className="w-5 h-5" />
+              <span className="text-sm font-medium">Rezervasyon Bilgileri</span>
             </Link>
           </li>
         </ul>

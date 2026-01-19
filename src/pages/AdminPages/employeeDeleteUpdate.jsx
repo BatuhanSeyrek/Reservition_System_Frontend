@@ -24,7 +24,7 @@ function EmployeeDeleteUpdate() {
       const res = await getData('/admin/chair/chairget');
       setChairList(res.data || res);
     } catch (err) {
-      console.error("Chair listesi çekilirken hata:", err);
+      console.error("Koltuk listesi çekilirken hata:", err);
     }
   };
 
@@ -43,7 +43,6 @@ function EmployeeDeleteUpdate() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Düzenlenmiş kontrol
     if (!employeeName || chairId === '') {
       return alert("Lütfen tüm alanları doldurun.");
     }
@@ -56,7 +55,7 @@ function EmployeeDeleteUpdate() {
         alert("Çalışan başarıyla güncellendi.");
       } else {
         await postData("/admin/employee/employeeAdd", payload);
-        alert("Çalışan başarıyla eklendi!");
+        alert("Çalışan başarıyla eklendi.");
       }
 
       await fetchEmployees();
@@ -67,7 +66,7 @@ function EmployeeDeleteUpdate() {
       setEditEmployeeId(null);
     } catch (err) {
       console.error("İşlem hatası:", err);
-      alert("İşlem hatası: " + (err.response?.data || err.message));
+      alert("İşlem sırasında hata oluştu.");
     }
   };
 
@@ -79,7 +78,7 @@ function EmployeeDeleteUpdate() {
         alert("Çalışan başarıyla silindi.");
       } catch (err) {
         console.error("Çalışan silinirken hata:", err);
-        alert("Silme hatası: " + (err.response?.data || err.message));
+        alert("Silme sırasında hata oluştu.");
       }
     }
   };
@@ -87,58 +86,71 @@ function EmployeeDeleteUpdate() {
   return (
     <AdminLayout>
       <div className="flex gap-6">
+        {/* SOL TARAF - LİSTE */}
         <div className="w-1/2">
-          <h2 className="text-xl font-semibold mb-4">Employee Information</h2>
+          <h2 className="text-xl font-semibold mb-4">Çalışan Bilgileri</h2>
+
           {employeeList.length > 0 ? employeeList.map((employee) => (
             <div
               key={employee.id}
               className="bg-white p-4 mb-4 border border-gray-300 rounded shadow flex justify-between items-center"
             >
               <div>
-                <p><strong>Employee Name:</strong> {employee.employeeName}</p>
-                <p><strong>Chair Name:</strong> {chairList.find(chair => chair.id === employee.chairId)?.chairName || 'Bilinmiyor'}</p>
+                <p><strong>Çalışan Adı:</strong> {employee.employeeName}</p>
+                <p>
+                  <strong>Koltuk Adı:</strong>{" "}
+                  {chairList.find(chair => chair.id === employee.chairId)?.chairName || 'Bilinmiyor'}
+                </p>
               </div>
+
               <div className="flex flex-col gap-2 text-sm">
                 <button
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition w-full"
                   onClick={() => handleEdit(employee)}
                 >
-                  Edit
+                  Düzenle
                 </button>
                 <button
                   className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-full transition"
                   onClick={() => handleDelete(employee.id)}
                 >
-                  Delete
+                  Sil
                 </button>
               </div>
             </div>
           )) : <p>Çalışan bulunamadı.</p>}
         </div>
 
+        {/* SAĞ TARAF - FORM */}
         <div className="w-1/2 bg-white p-6 rounded shadow">
           <h2 className="text-xl font-semibold mb-4">
-            {editMode ? "Edit Employee" : "Create Employee"}
+            {editMode ? "Çalışan Düzenle" : "Çalışan Ekle"}
           </h2>
+
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
-              <label className="block text-sm font-semibold text-gray-700">Employee Name</label>
+              <label className="block text-sm font-semibold text-gray-700">
+                Çalışan Adı
+              </label>
               <input
                 type="text"
                 onChange={(e) => setEmployeeName(e.target.value)}
                 value={employeeName}
                 className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg"
-                placeholder="Enter employee name"
+                placeholder="Çalışan adı girin"
               />
             </div>
+
             <div>
-              <label className="block text-sm font-semibold text-gray-700">Select Chair</label>
+              <label className="block text-sm font-semibold text-gray-700">
+                Koltuk Seç
+              </label>
               <select
                 value={chairId}
                 onChange={(e) => setChairId(e.target.value)}
                 className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg"
               >
-                <option value="">-- Select Chair --</option>
+                <option value="">-- Koltuk Seçin --</option>
                 {chairList.length > 0 ? (
                   chairList.map(chair => (
                     <option key={chair.id} value={chair.id}>
@@ -146,17 +158,19 @@ function EmployeeDeleteUpdate() {
                     </option>
                   ))
                 ) : (
-                  <option disabled>Sandalyeler yükleniyor veya boş</option>
+                  <option disabled>Koltuklar yükleniyor</option>
                 )}
               </select>
             </div>
+
             <div className="flex gap-4">
               <button
                 type="submit"
                 className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700"
               >
-                {editMode ? "Update Employee" : "Create Employee"}
+                {editMode ? "Güncelle" : "Ekle"}
               </button>
+
               {editMode && (
                 <button
                   type="button"
@@ -168,7 +182,7 @@ function EmployeeDeleteUpdate() {
                   }}
                   className="w-full bg-gray-400 text-white font-semibold py-2 rounded-lg hover:bg-gray-500"
                 >
-                  Cancel
+                  İptal
                 </button>
               )}
             </div>

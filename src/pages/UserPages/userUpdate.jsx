@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import UserLayout from './UserLayout'; // Yoluna göre güncelle
-import { Link, useNavigate } from 'react-router-dom';
-
-import { getData, putData } from '../../apiService'; // varsa bu şekilde içe aktar
+import { Link } from 'react-router-dom';
+import { getData, putData } from '../../apiService';
 
 function UserUpdate() {
 
@@ -12,32 +11,30 @@ function UserUpdate() {
     phoneNumber: '',
     notificationType: '',
     userName: '',
-    password: '',  // password state eklendi
+    password: '',
   });
 
   useEffect(() => {
     const fetchUser = async () => {
-    try {
-       const data=await getData('/user/myUser')
-          
-            setUser({
-              id: data.id ?? '',
-              email: data.email ?? '',
-              phoneNumber: data.phoneNumber ?? '',
-              notificationType: data.notificationType ?? '',
-              userName: data.userName ?? '',
-              password: ''
-            });
-         
-       
-    } catch (err) {
-      console.error("Kullanıcı bilgileri alınırken hata oluştu:", err);
-    }
-  };
+      try {
+        const data = await getData('/user/myUser');
 
-  fetchUser();
+        setUser({
+          id: data.id ?? '',
+          email: data.email ?? '',
+          phoneNumber: data.phoneNumber ?? '',
+          notificationType: data.notificationType ?? '',
+          userName: data.userName ?? '',
+          password: ''
+        });
+      } catch (err) {
+        console.error("Kullanıcı bilgileri alınırken hata oluştu:", err);
+      }
+    };
 
+    fetchUser();
   }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser(prev => ({ ...prev, [name]: value }));
@@ -45,22 +42,20 @@ function UserUpdate() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
 
     putData('/user/update', user)
-      .then(async () =>{
+      .then(async () => {
         alert("Bilgiler başarıyla güncellendi.");
-        // Güncel bilgileri tekrar çek
-        const data=await getData('/user/myUser')
-          
-            setUser({
-              id: data.id ?? '',
-              email: data.email ?? '',
-              phoneNumber: data.phoneNumber ?? '',
-              notificationType: data.notificationType ?? '',
-              userName: data.userName ?? '',
-              password: ''
-            });
+
+        const data = await getData('/user/myUser');
+        setUser({
+          id: data.id ?? '',
+          email: data.email ?? '',
+          phoneNumber: data.phoneNumber ?? '',
+          notificationType: data.notificationType ?? '',
+          userName: data.userName ?? '',
+          password: ''
+        });
       })
       .catch(err => {
         console.error("Güncelleme sırasında hata:", err);
@@ -72,12 +67,17 @@ function UserUpdate() {
     <UserLayout>
       <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-lg mx-auto mt-10">
         <div className="text-center mb-6">
-          <h2 className="text-3xl font-bold text-gray-800">Update Your Info</h2>
+          <h2 className="text-3xl font-bold text-gray-800">
+            Bilgilerimi Güncelle
+          </h2>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
+          
           <div>
-            <label htmlFor="userName" className="block text-sm font-semibold text-gray-700">Name</label>
+            <label htmlFor="userName" className="block text-sm font-semibold text-gray-700">
+              Ad Soyad
+            </label>
             <input
               type="text"
               id="userName"
@@ -90,7 +90,9 @@ function UserUpdate() {
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-semibold text-gray-700">Email</label>
+            <label htmlFor="email" className="block text-sm font-semibold text-gray-700">
+              E-posta
+            </label>
             <input
               type="email"
               id="email"
@@ -103,7 +105,9 @@ function UserUpdate() {
           </div>
 
           <div>
-            <label htmlFor="phoneNumber" className="block text-sm font-semibold text-gray-700">Phone</label>
+            <label htmlFor="phoneNumber" className="block text-sm font-semibold text-gray-700">
+              Telefon
+            </label>
             <input
               type="tel"
               id="phoneNumber"
@@ -116,7 +120,9 @@ function UserUpdate() {
           </div>
 
           <div>
-            <label htmlFor="notificationType" className="block text-sm font-semibold text-gray-700">Notification Type</label>
+            <label htmlFor="notificationType" className="block text-sm font-semibold text-gray-700">
+              Bildirim Türü
+            </label>
             <select
               id="notificationType"
               name="notificationType"
@@ -125,15 +131,17 @@ function UserUpdate() {
               required
               className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg"
             >
-              <option value="">Select...</option>
-              <option value="MAIL">Email</option>
+              <option value="">Seçiniz...</option>
+              <option value="MAIL">E-posta</option>
               <option value="SMS">SMS</option>
-              <option value="PUSH">Push</option>
+              <option value="PUSH">Bildirim</option>
             </select>
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-semibold text-gray-700">Password</label>
+            <label htmlFor="password" className="block text-sm font-semibold text-gray-700">
+              Şifre
+            </label>
             <input
               type="password"
               id="password"
@@ -150,16 +158,11 @@ function UserUpdate() {
             type="submit"
             className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700"
           >
-            Update
+            Güncelle
           </button>
         </form>
 
-        <p className="text-center text-sm text-gray-600 mt-4">
-          Already have an account?
-          <Link to="/" className="text-blue-600 hover:underline ml-1">
-            Login here
-          </Link>
-        </p>
+     
       </div>
     </UserLayout>
   );

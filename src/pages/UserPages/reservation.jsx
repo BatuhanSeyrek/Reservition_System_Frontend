@@ -25,13 +25,13 @@ export default function ChairAvailabilityPage() {
       setAvailableDates(firstSevenDays);
       setSelectedDate((prev) => prev || firstSevenDays[0] || "");
     } catch (err) {
-      console.error("Error fetching data:", err);
+      console.error("Veriler alınırken hata oluştu:", err);
     }
   };
 
   const handleReservationClick = async (chairId, time) => {
     const confirmCreate = window.confirm(
-      `Are you sure you want to create a reservation for ${selectedDate} at ${time}?`
+      `${selectedDate} tarihinde ${time} saatine rezervasyon oluşturmak istiyor musunuz?`
     );
     if (!confirmCreate) return;
 
@@ -44,7 +44,7 @@ export default function ChairAvailabilityPage() {
       };
 
       await postData("/store/create", payload);
-      alert("Reservation created successfully!");
+      alert("Rezervasyon başarıyla oluşturuldu!");
 
       setReservation((prev) =>
         prev.map((res) =>
@@ -63,8 +63,8 @@ export default function ChairAvailabilityPage() {
         )
       );
     } catch (err) {
-      console.error("Reservation error:", err);
-      alert("An error occurred while creating the reservation!");
+      console.error("Rezervasyon hatası:", err);
+      alert("Rezervasyon oluşturulurken bir hata oluştu!");
     }
   };
 
@@ -72,7 +72,7 @@ export default function ChairAvailabilityPage() {
     return (
       <UserLayout>
         <div className="p-6 text-center text-gray-500 text-lg">
-          No records found.
+          Kayıt bulunamadı.
         </div>
       </UserLayout>
     );
@@ -84,7 +84,7 @@ export default function ChairAvailabilityPage() {
         {/* Başlık ve Tarih Seçici */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 border-b pb-4 gap-4 md:gap-0">
           <h2 className="text-2xl font-bold flex items-center gap-2 text-red-600">
-            <Scissors className="w-6 h-6" /> Chair Availability
+            <Scissors className="w-6 h-6" /> Koltuk Müsaitlik Durumu
           </h2>
 
           <div className="flex items-center gap-2 bg-white p-2 rounded-xl shadow border">
@@ -103,7 +103,7 @@ export default function ChairAvailabilityPage() {
           </div>
         </div>
 
-        {/* Koltuklar Grid */}
+        {/* Koltuklar */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {reservation.map((res) => (
             <div
@@ -113,7 +113,7 @@ export default function ChairAvailabilityPage() {
               <div className="relative h-36 bg-red-100 flex items-center justify-center">
                 <img
                   src="https://static.thenounproject.com/png/7786343-512.png"
-                  alt="barber-chair-icon"
+                  alt="koltuk-ikon"
                   className="h-28 object-contain drop-shadow-lg"
                 />
               </div>
@@ -138,8 +138,8 @@ export default function ChairAvailabilityPage() {
                           available && handleReservationClick(res.chairId, time)
                         }
                       >
-                        <Clock className="w-4 h-4" /> {time} —{" "}
-                        {available ? "Müsait ✅" : "Meşgul ❌"}
+                        <Clock className="w-4 h-4" />
+                        {time} — {available ? "Müsait ✅" : "Dolu ❌"}
                       </div>
                     )
                   )}

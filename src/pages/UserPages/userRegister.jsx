@@ -43,7 +43,7 @@ function UserRegister() {
       {/* Form container */}
       <div className="relative z-10 w-full max-w-md p-8 bg-white bg-opacity-90 rounded-2xl shadow-lg space-y-6">
 
-        <h2 className="text-3xl font-bold text-gray-800 text-center mb-4">Berber Kaydı</h2>
+        <h2 className="text-3xl font-bold text-gray-800 text-center mb-4">Kullanıcı Kaydı</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
 
@@ -95,7 +95,7 @@ function UserRegister() {
 
         <p className="text-center text-sm text-gray-600">
           Zaten hesabınız var mı?{" "}
-          <Link to="/" className="text-red-600 hover:underline">
+          <Link to="/userLogin" className="text-red-600 hover:underline">
             Giriş Yap
           </Link>
         </p>

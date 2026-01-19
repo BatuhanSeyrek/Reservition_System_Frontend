@@ -55,13 +55,11 @@ function ChairDeleteUpdate() {
         alert("Koltuk başarıyla güncellendi.");
       } else {
         await postData("/admin/chair/chairAdd", chairData);
-        alert("Koltuk başarıyla eklendi!");
+        alert("Koltuk başarıyla eklendi.");
       }
 
-      // Listeyi yeniden çek
       await fetchChairs();
 
-      // Reset
       setOpeningTime('');
       setClosingTime('');
       setIslemSuresi('');
@@ -70,7 +68,7 @@ function ChairDeleteUpdate() {
       setEditChairId(null);
     } catch (err) {
       console.error("İşlem hatası:", err);
-      alert("İşlem hatası: " + (err.response?.data || err.message));
+      alert("İşlem sırasında hata oluştu.");
     }
   };
 
@@ -82,7 +80,7 @@ function ChairDeleteUpdate() {
         alert("Koltuk başarıyla silindi.");
       } catch (err) {
         console.error("Silme hatası:", err);
-        alert("Silme hatası: " + (err.response?.data || err.message));
+        alert("Silme sırasında hata oluştu.");
       }
     }
   };
@@ -94,24 +92,35 @@ function ChairDeleteUpdate() {
   return (
     <AdminLayout>
       <div className="flex gap-6">
-        {/* Sol: Liste */}
+        {/* SOL: LİSTE */}
         <div className="w-1/2">
-          <h2 className="text-xl font-semibold mb-4">Chair Information</h2>
+          <h2 className="text-xl font-semibold mb-4">Koltuk Bilgileri</h2>
+
           {chairList && chairList.length > 0 ? (
             chairList.map((chair) => (
-              <div key={chair.id} className="bg-white p-4 mb-4 border-2 border-black-200 rounded shadow flex">
+              <div
+                key={chair.id}
+                className="bg-white p-4 mb-4 border-2 border-gray-200 rounded shadow flex"
+              >
                 <div className="w-3/4">
-                  <p><strong>Chair Name:</strong> {chair.chairName}</p>
-                  <p><strong>Opening Time:</strong> {chair.openingTime}</p>
-                  <p><strong>Closing Time:</strong> {chair.closingTime}</p>
-                  <p><strong>Processing Time:</strong> {chair.islemSuresi}</p>
+                  <p><strong>Koltuk Adı:</strong> {chair.chairName}</p>
+                  <p><strong>Açılış Saati:</strong> {chair.openingTime}</p>
+                  <p><strong>Kapanış Saati:</strong> {chair.closingTime}</p>
+                  <p><strong>İşlem Süresi:</strong> {chair.islemSuresi}</p>
                 </div>
+
                 <div className="w-1/4 flex flex-col justify-center items-end gap-2 text-xl">
-                  <button onClick={() => handleEdit(chair)} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full">
-                    Edit
+                  <button
+                    onClick={() => handleEdit(chair)}
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full"
+                  >
+                    Düzenle
                   </button>
-                  <button onClick={() => handleDelete(chair.id)} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-full">
-                    Delete
+                  <button
+                    onClick={() => handleDelete(chair.id)}
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 w-full font-size-sm"
+                  >
+                    Sil
                   </button>
                 </div>
               </div>
@@ -121,38 +130,84 @@ function ChairDeleteUpdate() {
           )}
         </div>
 
-        {/* Sağ: Form */}
+        {/* SAĞ: FORM */}
         <div className="w-1/2 bg-white p-6 rounded shadow">
-          <h2 className="text-xl font-semibold mb-4">{editMode ? "Edit Chair" : "Create Chair"}</h2>
+          <h2 className="text-xl font-semibold mb-4">
+            {editMode ? "Koltuk Düzenle" : "Koltuk Ekle"}
+          </h2>
+
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
-              <label className="block text-sm font-semibold text-gray-700">Chair Name</label>
-              <input type="text" value={chairName} onChange={(e) => setChairName(e.target.value)} className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg" />
+              <label className="block text-sm font-semibold text-gray-700">
+                Koltuk Adı
+              </label>
+              <input
+                type="text"
+                value={chairName}
+                onChange={(e) => setChairName(e.target.value)}
+                className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg"
+              />
             </div>
+
             <div>
-              <label className="block text-sm font-semibold text-gray-700">Opening Time</label>
-              <input type="time" value={openingTime} onChange={(e) => setOpeningTime(e.target.value)} className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg" />
+              <label className="block text-sm font-semibold text-gray-700">
+                Açılış Saati
+              </label>
+              <input
+                type="time"
+                value={openingTime}
+                onChange={(e) => setOpeningTime(e.target.value)}
+                className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg"
+              />
             </div>
+
             <div>
-              <label className="block text-sm font-semibold text-gray-700">Closing Time</label>
-              <input type="time" value={closingTime} onChange={(e) => setClosingTime(e.target.value)} className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg" />
+              <label className="block text-sm font-semibold text-gray-700">
+                Kapanış Saati
+              </label>
+              <input
+                type="time"
+                value={closingTime}
+                onChange={(e) => setClosingTime(e.target.value)}
+                className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg"
+              />
             </div>
+
             <div>
-              <label className="block text-sm font-semibold text-gray-700">Processing Time</label>
-              <input type="time" value={islemSuresi} onChange={(e) => setIslemSuresi(e.target.value)} className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg" />
+              <label className="block text-sm font-semibold text-gray-700">
+                İşlem Süresi
+              </label>
+              <input
+                type="time"
+                value={islemSuresi}
+                onChange={(e) => setIslemSuresi(e.target.value)}
+                className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg"
+              />
             </div>
 
             <div className="flex gap-4">
-              <button type="submit" className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition">{editMode ? "Update" : "Create"}</button>
+              <button
+                type="submit"
+                className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition"
+              >
+                {editMode ? "Güncelle" : "Ekle"}
+              </button>
+
               {editMode && (
-                <button type="button" onClick={() => {
-                  setEditMode(false);
-                  setEditChairId(null);
-                  setOpeningTime('');
-                  setClosingTime('');
-                  setIslemSuresi('');
-                  setChairName('');
-                }} className="w-full bg-gray-400 text-white font-semibold py-2 rounded-lg hover:bg-gray-500 transition">Cancel</button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditMode(false);
+                    setEditChairId(null);
+                    setOpeningTime('');
+                    setClosingTime('');
+                    setIslemSuresi('');
+                    setChairName('');
+                  }}
+                  className="w-full bg-gray-400 text-white font-semibold py-2 rounded-lg hover:bg-gray-500 transition"
+                >
+                  İptal
+                </button>
               )}
             </div>
           </form>

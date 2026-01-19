@@ -4,10 +4,10 @@ import { faUserTie, faBookAtlas, faWrench, faUsers } from '@fortawesome/free-sol
 import { Link, useLocation } from 'react-router-dom';
 
 const USER_LINKS = [
-  { to: '/allStores', icon: faUserTie, label: 'All Stores' },
-  { to: '/reservationUpdateDelete', icon: faBookAtlas, label: 'Reservation' },
-  { to: '/userInformation', icon: faUsers, label: 'User Information' },
-  { to: '/userUpdate', icon: faWrench, label: 'User Update' },
+  { to: '/allStores', icon: faUserTie, label: 'Tüm Mağazalar' },
+  { to: '/reservationUpdateDelete', icon: faBookAtlas, label: 'Rezervasyonlarım' },
+  { to: '/userInformation', icon: faUsers, label: 'Kullanıcı Bilgileri' },
+  { to: '/userUpdate', icon: faWrench, label: 'Bilgilerimi Güncelle' },
 ];
 
 function UserSidebar({ isOpen, toggleSidebar }) {
@@ -28,7 +28,7 @@ function UserSidebar({ isOpen, toggleSidebar }) {
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <h2 className="text-2xl font-semibold mb-8 text-red-500 text-center tracking-wide border-b border-red-700 pb-3">
-          User Panel
+          Kullanıcı Paneli
         </h2>
 
         <ul className="space-y-3">
@@ -41,7 +41,7 @@ function UserSidebar({ isOpen, toggleSidebar }) {
                     ? 'bg-red-600 text-white shadow-md'
                     : 'text-gray-200 hover:bg-red-700 hover:text-white'
                 }`}
-                onClick={() => toggleSidebar()} // tüm ekranlarda tıklayınca kapanır
+                onClick={() => toggleSidebar()}
               >
                 <FontAwesomeIcon icon={link.icon} className="w-5 h-5" />
                 <span className="text-sm font-medium">{link.label}</span>
