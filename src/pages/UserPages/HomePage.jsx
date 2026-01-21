@@ -78,14 +78,6 @@ function HomePage() {
               className="mt-1 w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-400" 
             />
           </div>
-
-          <div className="flex items-center justify-between">
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="form-checkbox text-red-600" />
-              <span className="text-sm text-gray-600">Beni Hatırla</span>
-            </label>
-          </div>
-
           <button 
             type="submit"
             className="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 transition duration-200 font-semibold"

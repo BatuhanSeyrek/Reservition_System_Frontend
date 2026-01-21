@@ -60,7 +60,7 @@ function OwnerLogin() {
         <form onSubmit={handleLogin} className="space-y-4">
 
           <div>
-            <label htmlFor="username" className="block text-sm font-semibold text-gray-700">Yönetici Kullanıcı Adı</label>
+            <label htmlFor="username" className="block text-sm font-semibold text-gray-700">Yönetici Adı</label>
             <input 
               type="text" 
               id="username" 
@@ -85,12 +85,7 @@ function OwnerLogin() {
             />
           </div>
 
-          <div className="flex items-center justify-between text-sm text-gray-600">
-            <label className="flex items-center gap-2">
-              <input type="checkbox" className="form-checkbox text-red-600" />
-              <span>Beni Hatırla</span>
-            </label>
-          </div>
+
 
           <button 
             type="submit"
